@@ -16,7 +16,7 @@
                 m:MapLayer.Position ="32.298705, 34.874000" 
                 m:MapLayer.PositionOrigin="BottomCenter"  Width="30" Height="30" 
                 >
-                <Image x:Name="Icon" Source = "Resource/icon2.png"
+                <Image x:Name="Icon" Source = "../Resource/icon2.png"
                        Width="15" Height="15">
                 </Image>
             </Canvas>

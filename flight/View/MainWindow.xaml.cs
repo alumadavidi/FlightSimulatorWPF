@@ -1,4 +1,6 @@
-﻿using System;
+﻿using flight.Model;
+using flight.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,10 +22,14 @@ namespace flight
     /// </summary>
     public partial class MainWindow : Window
     {
+        private FlightViewModel flightViewModel;
         public MainWindow()
         {
             InitializeComponent();
-         
+            flightViewModel = new FlightViewModel(new FlightModel(new TelnetClient()));
+            DataContext = flightViewModel;
+            
+
         }
 
         private void Map_Loaded(object sender, RoutedEventArgs e)
