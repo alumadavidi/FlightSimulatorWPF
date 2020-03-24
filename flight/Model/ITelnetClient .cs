@@ -7,7 +7,7 @@ namespace flight.Model
     interface ITelnetClient
     {
         void connect(string ip, int port);
-        void write(string command);
+        void write(List<string> command);
         string read(); // blocking call
         void disconnect();
     }

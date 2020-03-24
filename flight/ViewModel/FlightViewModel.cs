@@ -12,7 +12,7 @@ namespace flight.ViewModel
         private double elevator;
         private double rudder;
         private double throttle;
-        private double aileron;
+        private double alieron;
         public event PropertyChangedEventHandler PropertyChanged;
         public FlightViewModel(lFlightModel iFlight)
         {
@@ -20,8 +20,13 @@ namespace flight.ViewModel
             flightModel.PropertyChanged += delegate (Object sender, PropertyChangedEventArgs e) {
                 NotifyPropertyChanged("VM_" + e.PropertyName);
             };
-            flightModel.connect("127.0.0.1", 5404);
-
+            flightModel.connect("192.168.202.129", 5403);
+            elevator = 0;
+            rudder = 0;
+            throttle = 0;
+            alieron = 0;
+            flightModel.start();
+            VM_Aileron = 5;
         }
         
         public void NotifyPropertyChanged(string propName) {
@@ -32,6 +37,11 @@ namespace flight.ViewModel
         {
             return flightModel.ParamSim;
           
+        }
+        public int VM_Efrat()
+        {
+            return flightModel.Efrat;
+
         }
         public double VM_Elevator
         {
@@ -66,19 +76,19 @@ namespace flight.ViewModel
             set
             {
                 throttle = value;
-                flightModel.moveSlid(rudder, elevator);
+                flightModel.moveSlid(throttle, alieron);
             }
         }
         public double VM_Aileron
         {
             get
             {
-                return aileron;
+                return alieron;
             }
             set
             {
-                aileron = value;
-                flightModel.moveSlid(rudder, elevator);
+                alieron = value;
+                flightModel.moveSlid(throttle, alieron);
             }
         }
     }

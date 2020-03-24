@@ -63,6 +63,10 @@
                 </TransformGroup>
             </local:Map.RenderTransform>
         </local:Map>
+        <ProgressBar Grid.Column="1" HorizontalAlignment="Left" Height="22" Margin="279,46,0,0" VerticalAlignment="Top" Width="158"
+                     Value="{Binding VM_Efrat}">
+        </ProgressBar>
+
     </Grid>
 
 </Window>

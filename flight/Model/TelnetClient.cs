@@ -8,7 +8,8 @@ namespace flight.Model
 {
     class TelnetClient : ITelnetClient
     {
-        //TelnetClient() { }
+        private Socket sender;
+        List<string> adressDashboard;
         public void connect(string ip, int port)
         {
 
@@ -25,8 +26,7 @@ namespace flight.Model
                 IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
 
                 // Create a TCP/IP  socket.    
-                Socket sender = new Socket(ipAddress.AddressFamily,
-                    SocketType.Stream, ProtocolType.Tcp);
+                sender = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
                 // Connect the socket to the remote endpoint. Catch any errors.    
                 try
@@ -34,24 +34,7 @@ namespace flight.Model
                     // Connect to Remote EndPoint  
                     sender.Connect(remoteEP);
 
-                    Console.WriteLine("Socket connected to {0}",
-                        sender.RemoteEndPoint.ToString());
-
-                    // Encode the data string into a byte array.    
-                    byte[] msg = Encoding.ASCII.GetBytes("This is a test<EOF>");
-
-                    // Send the data through the socket.    
-                    int bytesSent = sender.Send(msg);
-
-                    // Receive the response from the remote device.    
-                    int bytesRec = sender.Receive(bytes);
-                    Console.WriteLine("Echoed test = {0}",
-                        Encoding.ASCII.GetString(bytes, 0, bytesRec));
-
-                    // Release the socket.    
-                    sender.Shutdown(SocketShutdown.Both);
-                    sender.Close();
-
+                    Console.WriteLine("Socket connected to {0}", sender.RemoteEndPoint.ToString());
                 }
                 catch (ArgumentNullException ane)
                 {
@@ -72,21 +55,92 @@ namespace flight.Model
                 Console.WriteLine(e.ToString());
             }
         }
-    
-
         public void disconnect()
         {
-            throw new NotImplementedException();
+            // Release the socket.    
+            sender.Shutdown(SocketShutdown.Both);
+            sender.Close();
         }
 
         public string read()
         {
-            throw new NotImplementedException();
+            byte[] msgInBytes;
+            string messege = "";
+            string lineFromSim = "";
+            initializeAdressAdressDashboardr();
+            for(int i = 0; i < adressDashboard.Count; i++)
+            {
+                messege += "get " + adressDashboard[i] + "\n";
+            }
+            msgInBytes = Encoding.ASCII.GetBytes(messege);
+
+            // Send the data through the socket.    
+            int bytesSent = sender.Send(msgInBytes);
+            for (int i = 0; i < adressDashboard.Count; i++)
+            {
+                byte[] bytes = new byte[1024];
+                // Receive the response from the remote device.    
+                try
+                {
+                    int bytesRec = sender.Receive(bytes);
+                    Console.WriteLine(i.ToString() +" :" + Encoding.ASCII.GetString(bytes, 0, bytesRec));
+                    lineFromSim += Encoding.ASCII.GetString(bytes, 0, bytesRec);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("fail in read from simulator" + e.ToString());
+                }
+            }
+            return lineFromSim;
+
         }
 
-        public void write(string command)
+        private void initializeAdressAdressDashboardr()
         {
-            throw new NotImplementedException();
+            //two last adress are for map
+            adressDashboard = new List<string> {
+                "/instrumentation/heading-indicator/indicated-heading-deg",
+                "/instrumentation/gps/indicated-vertical-speed",
+                "/instrumentation/gps/indicated-ground-speed-kt",
+                "/instrumentation/airspeed-indicator/indicated-speed-kt",
+                "/instrumentation/gps/indicated-altitude-ft",
+                "/instrumentation/attitude-indicator/internal-roll-deg",
+                "/instrumentation/attitude-indicator/internal-pitch-deg",
+                "/instrumentation/altimeter/indicated-altitude-ft", 
+                "/position/latitude-deg",
+                "/position/longitude-deg"
+            }; 
         }
-    }
+
+        public void write(List<string> command)
+        {
+           
+            string allCommand = "";
+            try
+            {
+                for(int i = 0; i < command.Count; i++)
+                {
+                    allCommand += "set " + command[i] + "\n";
+                }
+                // Encode the data string into a byte array.    
+                byte[] msg = Encoding.ASCII.GetBytes(allCommand);
+
+                // Send the data through the socket.    
+                int bytesSent = sender.Send(msg);
+                for(int i = 0; i < command.Count; i++)
+                {
+                    byte[] bytes = new byte[1024];
+                    int bytesRec = sender.Receive(bytes);
+                    Console.WriteLine(Encoding.ASCII.GetString(bytes, 0, bytesRec) + " "+i +
+                        " get from simulator");
+
+                }
+                
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("fail in write to Simulator" + e.ToString());
+            }
+        }
+     }
 }
