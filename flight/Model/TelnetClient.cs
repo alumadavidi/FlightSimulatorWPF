@@ -6,10 +6,10 @@ using System.Text;
 
 namespace flight.Model
 {
-    class TelnetClient : ITelnetClient
+    public class TelnetClient : ITelnetClient
     {
         private Socket sender;
-        List<string> adressDashboard;
+        
         public void connect(string ip, int port)
         {
 
@@ -64,78 +64,37 @@ namespace flight.Model
 
         public string read()
         {
-            byte[] msgInBytes;
-            string messege = "";
-            string lineFromSim = "";
-            initializeAdressAdressDashboardr();
-            for(int i = 0; i < adressDashboard.Count; i++)
-            {
-                messege += "get " + adressDashboard[i] + "\n";
-            }
-            msgInBytes = Encoding.ASCII.GetBytes(messege);
 
-            // Send the data through the socket.    
-            int bytesSent = sender.Send(msgInBytes);
-            for (int i = 0; i < adressDashboard.Count; i++)
+            string lineFromSim = "";
+
+            byte[] bytes = new byte[1024];
+            // Receive the response from the remote device.    
+            try
             {
-                byte[] bytes = new byte[1024];
-                // Receive the response from the remote device.    
-                try
-                {
-                    int bytesRec = sender.Receive(bytes);
-                    Console.WriteLine(i.ToString() +" :" + Encoding.ASCII.GetString(bytes, 0, bytesRec));
-                    lineFromSim += Encoding.ASCII.GetString(bytes, 0, bytesRec);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("fail in read from simulator" + e.ToString());
-                }
+                int bytesRec = sender.Receive(bytes);
+                Console.WriteLine("read " + Encoding.ASCII.GetString(bytes, 0, bytesRec));
+                lineFromSim = Encoding.ASCII.GetString(bytes, 0, bytesRec);
             }
+            catch (Exception e)
+            {
+                Console.WriteLine("fail in read from simulator" + e.ToString());
+            }
+           
             return lineFromSim;
 
         }
 
-        private void initializeAdressAdressDashboardr()
-        {
-            //two last adress are for map
-            adressDashboard = new List<string> {
-                "/instrumentation/heading-indicator/indicated-heading-deg",
-                "/instrumentation/gps/indicated-vertical-speed",
-                "/instrumentation/gps/indicated-ground-speed-kt",
-                "/instrumentation/airspeed-indicator/indicated-speed-kt",
-                "/instrumentation/gps/indicated-altitude-ft",
-                "/instrumentation/attitude-indicator/internal-roll-deg",
-                "/instrumentation/attitude-indicator/internal-pitch-deg",
-                "/instrumentation/altimeter/indicated-altitude-ft", 
-                "/position/latitude-deg",
-                "/position/longitude-deg"
-            }; 
-        }
+        
 
-        public void write(List<string> command)
+        public void write(string command)
         {
-           
-            string allCommand = "";
             try
             {
-                for(int i = 0; i < command.Count; i++)
-                {
-                    allCommand += "set " + command[i] + "\n";
-                }
                 // Encode the data string into a byte array.    
-                byte[] msg = Encoding.ASCII.GetBytes(allCommand);
+                byte[] msg = Encoding.ASCII.GetBytes(command);
 
                 // Send the data through the socket.    
                 int bytesSent = sender.Send(msg);
-                for(int i = 0; i < command.Count; i++)
-                {
-                    byte[] bytes = new byte[1024];
-                    int bytesRec = sender.Receive(bytes);
-                    Console.WriteLine(Encoding.ASCII.GetString(bytes, 0, bytesRec) + " "+i +
-                        " get from simulator");
-
-                }
-                
             }
             catch (Exception e)
             {

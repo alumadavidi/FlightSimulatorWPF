@@ -2,15 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using INotifyPropertyChanged = flight.Model.INotifyPropertyChanged;
+using System.Windows;
 
 namespace flight.ViewModel
 {
-    class FlightViewModel : INotifyPropertyChanged
+     public class FlightViewModel : INotifyPropertyChanged
     {
         private lFlightModel flightModel;
-        private double elevator;
-        private double rudder;
+        private Point rudderElevator; // x - rudder, y - elevator
         private double throttle;
         private double alieron;
         public event PropertyChangedEventHandler PropertyChanged;
@@ -21,52 +20,31 @@ namespace flight.ViewModel
                 NotifyPropertyChanged("VM_" + e.PropertyName);
             };
             flightModel.connect("192.168.202.129", 5403);
-            elevator = 0;
-            rudder = 0;
+            rudderElevator.X = 0;
+            rudderElevator.Y = 0;
             throttle = 0;
             alieron = 0;
             flightModel.start();
-            VM_Aileron = 5;
         }
-        
+
         public void NotifyPropertyChanged(string propName) {
             if (this.PropertyChanged != null)
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
         }
-        public List<Double> VM_ParamSim()
-        {
-            return flightModel.ParamSim;
-          
-        }
-        public int VM_Efrat()
-        {
-            return flightModel.Efrat;
-
-        }
-        public double VM_Elevator
+       
+        public Point VM_RudderElevator
         {
             get
             {
-                return elevator;
+                return rudderElevator;
             }
             set
             {
-                elevator = value;
-                flightModel.moveJoy(rudder, elevator);
+                rudderElevator = value;
+                flightModel.moveJoy(rudderElevator.X, rudderElevator.Y);
             }
         }
-        public double VM_Rudder
-        {
-            get
-            {
-                return rudder;
-            }
-            set
-            {
-                rudder = value;
-                flightModel.moveJoy(rudder, elevator);
-            }
-        }
+       
         public double VM_Throttle
         {
             get
@@ -89,6 +67,80 @@ namespace flight.ViewModel
             {
                 alieron = value;
                 flightModel.moveSlid(throttle, alieron);
+            }
+        }
+
+
+
+        public double IndicatedHeading
+        {
+            get
+            {
+                return flightModel.IndicatedHeading;
+            }
+        }
+        public double GpsVertical
+        {
+            get
+            {
+                return flightModel.GpsVertical;
+            }
+        }
+        public double GpsGround
+        {
+            get
+            {
+                return flightModel.GpsGround;
+            }
+        }
+        public double Airspeed
+        {
+            get
+            {
+                return flightModel.Airspeed;
+            }
+        }
+        public double GpsAltitude
+        {
+            get
+            {
+                return flightModel.GpsAltitude;
+            }
+        }
+        public double Pitch
+        {
+            get
+            {
+                return flightModel.Pitch;
+            }
+        }
+        public double PitchDeg
+        {
+            get
+            {
+                return flightModel.PitchDeg;
+            }
+        }
+        public double Altimeter
+        {
+            get
+            {
+                return flightModel.Altimeter;
+            }
+        }
+        //for map
+        public double LatitudeDeg
+        {
+            get
+            {
+                return flightModel.LatitudeDeg;
+            }
+        }
+        public double LongitudeDeg
+        {
+            get
+            {
+                return flightModel.LongitudeDeg;
             }
         }
     }

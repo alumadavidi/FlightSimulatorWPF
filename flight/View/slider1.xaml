@@ -14,8 +14,8 @@
                 </LinearGradientBrush>
             </Grid.OpacityMask>
             <TextBlock x:Name="Slider_Value" TextWrapping="Wrap" Canvas.Left="19" Canvas.Top="71" Margin="10,71,10,12"/>
-            <Slider x:Name="GeneralSlider" HorizontalAlignment="Center" Margin="0,87,0,0" VerticalAlignment="Top" Width="120" Maximum="100" Minimum="0"
-                    TickFrequency="5" TickPlacement="None" ValueChanged="GeneralSlider_ValueChanged"/>
+            <Slider x:Name="GeneralSlider" HorizontalAlignment="Center" Margin="0,87,0,0" VerticalAlignment="Top" Width="120"
+                    TickFrequency="0.1" TickPlacement="None" ValueChanged="GeneralSlider_ValueChanged"/>
         </Grid>
     </Canvas>
 </UserControl>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using flight.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -11,11 +12,23 @@ namespace flight
   /// </summary>
     public partial class Joystick : UserControl
     {
+        private Window window;
         private double rudder;
         private double elevator;
+        private FlightViewModel flightViewModel;
         public Joystick()
         {
             InitializeComponent();
+        }
+        public void setWindow(Window win)
+        {
+            window = win;
+            setFlightViewWindow();
+        }
+
+        private void setFlightViewWindow()
+        {
+            flightViewModel = ((MainWindow)window).GetFlightViewModel();
         }
 
         private void centerKnob_Completed(object sender, EventArgs e)
@@ -62,8 +75,8 @@ namespace flight
                         elevator = -1;
                     }
                 }
+               
             }
-
             else
             //stop pressed - back to original place
             {
@@ -72,25 +85,25 @@ namespace flight
                 knobPosition.Y = 0;
                 elevator = 0;
             }
-            Console.WriteLine("x" + rudder);
-            Console.WriteLine("y" + elevator);
+            //Console.WriteLine("x" + rudder);
+            //Console.WriteLine("y" + elevator);
+            flightViewModel.VM_RudderElevator = new Point(rudder, elevator);            
         }
 
 
         private void Knob_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             knobPosition.X = 0;
-            rudder = 0;
             knobPosition.Y = 0;
-            elevator = 0;
+            flightViewModel.VM_RudderElevator = new Point(knobPosition.X, knobPosition.Y);
+
         }
 
         private void Knob_MouseLeave(object sender, MouseEventArgs e)
         {
             knobPosition.X = 0;
-            rudder = 0;
             knobPosition.Y = 0;
-            elevator = 0;
+            flightViewModel.VM_RudderElevator = new Point(knobPosition.X, knobPosition.Y);
         }
     }
 }

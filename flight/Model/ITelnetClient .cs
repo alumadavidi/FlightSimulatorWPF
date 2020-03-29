@@ -4,10 +4,10 @@ using System.Text;
 
 namespace flight.Model
 {
-    interface ITelnetClient
+    public interface ITelnetClient
     {
         void connect(string ip, int port);
-        void write(List<string> command);
+        void write(string command);
         string read(); // blocking call
         void disconnect();
     }

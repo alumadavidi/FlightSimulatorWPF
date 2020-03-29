@@ -1,65 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace flight.Model
 {
-    class FlightModel : lFlightModel
+    public class FlightModel : lFlightModel
     {
         private ITelnetClient telnetClient;
         private volatile bool stop;
-        private List<Double> paramSim;
+        private Queue<string> sendToSim;
         private List<string> joystickAdress;
         private List<string> sliderAdress;
-        private int efrat;
+        private List<string> adressDashboard;
+        //for dashboard
+        private double indicatedHeading;
+        private double gpsVertical;
+        private double gpsGround;
+        private double airspeed;
+        private double gpsAltitude;
+        private double pitch;
+        private double pitchDeg;
+        private double altimeter;
+        //for map
+        private double latitudeDeg;
+        private double longitudeDeg;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public FlightModel(ITelnetClient tc)
         {
             telnetClient = tc;
             stop = false;
             initalizeJoyAdress();
             initalizeSlidAdress();
-            efrat = 0;
-        }
-        private void initalizeJoyAdress()
-        {
-            joystickAdress = new List<string>
-            {
-                  "/controls/flight/rudder",
-                 "/controls/flight/elevator"
-            };
-        }
-        private void initalizeSlidAdress()
-        {
-            sliderAdress = new List<string>
-            {
-                "/controls/engines/current-engine/throttle",
-                "/controls/flight/aileron"
-                 
-            };
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        public List<double> ParamSim {
-            get {
-                return paramSim;
-            }
-            set {
-                paramSim = new List<Double>(value);
-                NotifyPropertyChanged("ParamSim");
-            }
-        }
-        public int Efrat
-        {
-            get
-            {
-                return efrat;
-            }
-            set
-            {
-                efrat =value;
-                NotifyPropertyChanged("Efrat");
-            }
+            initializeAdressAdressDashboardr();
+            sendToSim = new Queue<string>();
         }
 
         public void NotifyPropertyChanged(string propName)
@@ -77,43 +55,248 @@ namespace flight.Model
         {
             telnetClient.disconnect();
         }
-
-        public void moveJoy(double ru, double el)
+        public void sendToSimulator()
         {
-
-            List<string> writeToSim = new List<string>()
+            new Thread(delegate ()
             {
-                joystickAdress[0] + " " +ru.ToString(), 
-                joystickAdress[1] + " "+ el.ToString()
-            };
-            telnetClient.write(writeToSim);
+                while (!stop)
+                {
+                    while (sendToSim.Count() > 0)
+                    {
+                        telnetClient.write(sendToSim.Peek());
+                        sendToSim.Dequeue();
+                        telnetClient.read();
+                    }
+                }
+            }).Start();
         }
 
-        
+        public void insertCommand(string command)
+        {
+            sendToSim.Enqueue(command);
+        }
+        public void moveJoy(double ru, double el)
+        {
+            insertCommand(joystickAdress[0] + ru.ToString() + "\n");
+            insertCommand(joystickAdress[1] + el.ToString() + "\n");
+        }
+
+
 
         public void moveSlid(double th, double al)
         {
-            List<string> writeToSim = new List<string>()
-            {
-                sliderAdress[0] + " " + th.ToString(),
-                sliderAdress[1] + " " + al.ToString()
-            };
-            telnetClient.write(writeToSim);
+            insertCommand(sliderAdress[0] + th.ToString() + "\n");
+            insertCommand(sliderAdress[1] + al.ToString() + "\n");
+            //string sendToSim =
+            //   sliderAdress[0] + th.ToString() + "\n" +
+            //   sliderAdress[1] + al.ToString() + "\n";
+            //telnetClient.write(sendToSim);
+
+            //telnetClient.read();
+            //telnetClient.read();
+
         }
+        public void start()
+        {
+            sendToSimulator();
+            new Thread(delegate ()
+            {
+                while (!stop) // 4 loops in second
+                {
+                    telnetClient.write(adressDashboard[0]);
+                    IndicatedHeading = Convert.ToDouble(telnetClient.read());
+
+                    telnetClient.write(adressDashboard[1]);
+                    GpsVertical = Convert.ToDouble(telnetClient.read());
+
+                    telnetClient.write(adressDashboard[2]);
+                    GpsGround = Convert.ToDouble(telnetClient.read());
+
+                    telnetClient.write(adressDashboard[3]);
+                    Airspeed = Convert.ToDouble(telnetClient.read());
+
+                    telnetClient.write(adressDashboard[4]);
+                    GpsAltitude = Convert.ToDouble(telnetClient.read());
+
+                    telnetClient.write(adressDashboard[5]);
+                    Pitch = Convert.ToDouble(telnetClient.read());
+
+                    telnetClient.write(adressDashboard[6]);
+                    PitchDeg = Convert.ToDouble(telnetClient.read());
+
+                    telnetClient.write(adressDashboard[7]);
+                    Altimeter = Convert.ToDouble(telnetClient.read());
+
+                    telnetClient.write(adressDashboard[8]);
+                    LatitudeDeg = Convert.ToDouble(telnetClient.read());
+
+                    telnetClient.write(adressDashboard[9]);
+                    LongitudeDeg = Convert.ToDouble(telnetClient.read());
+
+                    Thread.Sleep(250);
+                }
+            }).Start();
+
+        }
+        private void initalizeJoyAdress()
+        {
+            joystickAdress = new List<string>
+            {
+                  "set /controls/flight/rudder ",
+                 "set /controls/flight/elevator "
+            };
+        }
+        private void initalizeSlidAdress()
+        {
+            sliderAdress = new List<string>
+            {
+                "set /controls/engines/current-engine/throttle ",
+                "set /controls/flight/aileron "
+
+            };
+        }
+        private void initializeAdressAdressDashboardr()
+        {
+            //two last adress are for map
+            adressDashboard = new List<string> {
+                "get /instrumentation/heading-indicator/indicated-heading-deg\n",
+                "get /instrumentation/gps/indicated-vertical-speed\n",
+                "get /instrumentation/gps/indicated-ground-speed-kt\n",
+                "get /instrumentation/airspeed-indicator/indicated-speed-kt\n",
+                "get /instrumentation/gps/indicated-altitude-ft\n",
+                "get /instrumentation/attitude-indicator/internal-roll-deg\n",
+                "get /instrumentation/attitude-indicator/internal-pitch-deg\n",
+                "get /instrumentation/altimeter/indicated-altitude-ft\n",
+                "get /position/latitude-deg\n" ,
+                "get /position/longitude-deg\n"
+            };
+        }
+
+        public double IndicatedHeading
+        {
+            get
+            {
+                return indicatedHeading;
+            }
+            set
+            {
+                indicatedHeading = value;
+                NotifyPropertyChanged("IndicatedHeading");
+            }
+        }
+        public double GpsVertical
+        {
+            get
+            {
+                return gpsVertical;
+            }
+            set
+            {
+                gpsVertical = value;
+                NotifyPropertyChanged("GpsVertical");
+            }
+        }
+        public double GpsGround
+        {
+            get
+            {
+                return gpsGround;
+            }
+            set
+            {
+                gpsGround = value;
+                NotifyPropertyChanged("GpsGround");
+            }
+        }
+        public double Airspeed
+        {
+            get
+            {
+                return airspeed;
+            }
+            set
+            {
+                airspeed = value;
+                NotifyPropertyChanged("Airspeed");
+            }
+        }
+        public double GpsAltitude
+        {
+            get
+            {
+                return gpsAltitude;
+            }
+            set
+            {
+                gpsAltitude = value;
+                NotifyPropertyChanged("GpsAltitude");
+            }
+        }
+        public double Pitch
+        {
+            get
+            {
+                return pitch;
+            }
+            set
+            {
+                pitch = value;
+                NotifyPropertyChanged("Pitch");
+            }
+        }
+        public double PitchDeg
+        {
+            get
+            {
+                return pitchDeg;
+            }
+            set
+            {
+                pitchDeg = value;
+                NotifyPropertyChanged("PitchDeg");
+            }
+        }
+        public double Altimeter
+        {
+            get
+            {
+                return altimeter;
+            }
+            set
+            {
+                altimeter = value;
+                NotifyPropertyChanged("Altimeter");
+            }
+        }
+        public double LatitudeDeg
+        {
+            get
+            {
+                return latitudeDeg;
+            }
+            set
+            {
+                latitudeDeg = value;
+                NotifyPropertyChanged("LatitudeDeg");
+            }
+        }
+        public double LongitudeDeg
+        {
+            get
+            {
+                return longitudeDeg;
+            }
+            set
+            {
+                longitudeDeg = value;
+                NotifyPropertyChanged("LongitudeDeg");
+            }
+        }
+        
+
 
         
 
-        public void start()
-        {
-            string fromSim = telnetClient.read();
-            string[] spliteString = fromSim.Split('\n');
-            List<Double> paramFromSim = new List<double>();
-            for(int i = 0; i < spliteString.Length - 1; i++)
-            {
-                paramFromSim.Add(Convert.ToDouble(spliteString[i]));
-            }
-            ParamSim = paramFromSim;
-            Efrat = 5;
-        }
+       
     }
 }

@@ -23,18 +23,38 @@ namespace flight
     public partial class MainWindow : Window
     {
         private FlightViewModel flightViewModel;
+        
         public MainWindow()
         {
             InitializeComponent();
             flightViewModel = new FlightViewModel(new FlightModel(new TelnetClient()));
             DataContext = flightViewModel;
-            
+            ThrottleLabal.Content = Throttle.Name.ToString() + ": 0";
+            AileronLabal.Content = Aileron.Name.ToString() + ": 0";
+            MyJoystick.setWindow(this);
 
         }
-
-        private void Map_Loaded(object sender, RoutedEventArgs e)
+        public FlightViewModel GetFlightViewModel()
         {
-
+            return flightViewModel;
         }
+
+
+
+
+        private void SliderThrottle_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            
+            double value = Math.Round(Throttle.Value, 2);
+            ThrottleLabal.Content = Throttle.Name.ToString() + ": " + value.ToString();
+        }
+
+        private void SliderAileron_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            double value = Math.Round(Aileron.Value, 2);
+            AileronLabal.Content = Aileron.Name.ToString() + ": " + value.ToString();
+        }
+
+        
     }
 }
