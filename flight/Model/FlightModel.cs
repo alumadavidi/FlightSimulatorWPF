@@ -39,12 +39,18 @@ namespace flight.Model
             initializeAdressAdressDashboardr();
             sendToSim = new Queue<string>();
         }
-
-        public void NotifyPropertyChanged(string propName)
+        private void NotifyPropretyChanged(string propName)
         {
             if (this.PropertyChanged != null)
+            {
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
+            }
         }
+        //public void NotifyPropertyChanged(string propName)
+        //{
+        //    if (this.PropertyChanged != null)
+        //        this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
+        //}
 
         public void connect(string ip, int port)
         {
@@ -136,6 +142,7 @@ namespace flight.Model
                     Thread.Sleep(250);
                 }
             }).Start();
+            //IndicatedHeading = 5;
 
         }
         private void initalizeJoyAdress()
@@ -181,7 +188,7 @@ namespace flight.Model
             set
             {
                 indicatedHeading = value;
-                NotifyPropertyChanged("IndicatedHeading");
+                NotifyPropretyChanged("IndicatedHeading");
             }
         }
         public double GpsVertical
@@ -193,7 +200,7 @@ namespace flight.Model
             set
             {
                 gpsVertical = value;
-                NotifyPropertyChanged("GpsVertical");
+                NotifyPropretyChanged("GpsVertical");
             }
         }
         public double GpsGround
@@ -205,7 +212,7 @@ namespace flight.Model
             set
             {
                 gpsGround = value;
-                NotifyPropertyChanged("GpsGround");
+                NotifyPropretyChanged("GpsGround");
             }
         }
         public double Airspeed
@@ -217,7 +224,7 @@ namespace flight.Model
             set
             {
                 airspeed = value;
-                NotifyPropertyChanged("Airspeed");
+                NotifyPropretyChanged("Airspeed");
             }
         }
         public double GpsAltitude
@@ -229,7 +236,7 @@ namespace flight.Model
             set
             {
                 gpsAltitude = value;
-                NotifyPropertyChanged("GpsAltitude");
+                NotifyPropretyChanged("GpsAltitude");
             }
         }
         public double Pitch
@@ -241,7 +248,7 @@ namespace flight.Model
             set
             {
                 pitch = value;
-                NotifyPropertyChanged("Pitch");
+                NotifyPropretyChanged("Pitch");
             }
         }
         public double PitchDeg
@@ -253,7 +260,7 @@ namespace flight.Model
             set
             {
                 pitchDeg = value;
-                NotifyPropertyChanged("PitchDeg");
+                NotifyPropretyChanged("PitchDeg");
             }
         }
         public double Altimeter
@@ -265,7 +272,7 @@ namespace flight.Model
             set
             {
                 altimeter = value;
-                NotifyPropertyChanged("Altimeter");
+                NotifyPropretyChanged("Altimeter");
             }
         }
         public double LatitudeDeg
@@ -277,7 +284,7 @@ namespace flight.Model
             set
             {
                 latitudeDeg = value;
-                NotifyPropertyChanged("LatitudeDeg");
+                NotifyPropretyChanged("LatitudeDeg");
             }
         }
         public double LongitudeDeg
@@ -289,7 +296,7 @@ namespace flight.Model
             set
             {
                 longitudeDeg = value;
-                NotifyPropertyChanged("LongitudeDeg");
+                NotifyPropretyChanged("LongitudeDeg");
             }
         }
         

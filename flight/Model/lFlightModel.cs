@@ -7,16 +7,16 @@ namespace flight.Model
 {
     public interface lFlightModel : INotifyPropertyChanged
     {
-        double IndicatedHeading { get; }
-        double GpsVertical { get; }
-        double GpsGround { get; }
-        double Airspeed { get; }
-        double GpsAltitude { get; }
-        double Pitch { get; }
-        double PitchDeg { get; }
-        double Altimeter { get; }
-        double LatitudeDeg { get; }
-        double LongitudeDeg { get; }
+        double IndicatedHeading { get; set; }
+        double GpsVertical { get; set; }
+        double GpsGround { get; set; }
+        double Airspeed { get; set; }
+        double GpsAltitude { get; set; }
+        double Pitch { get; set; }
+        double PitchDeg { get; set; }
+        double Altimeter { get; set; }
+        double LatitudeDeg { get; set; }
+        double LongitudeDeg { get; set; }
 
         void connect(string ip, int port);
         void disconnect();

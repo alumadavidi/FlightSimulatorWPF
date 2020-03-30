@@ -16,8 +16,9 @@ namespace flight.ViewModel
         public FlightViewModel(lFlightModel iFlight)
         {
             this.flightModel = iFlight;
-            flightModel.PropertyChanged += delegate (Object sender, PropertyChangedEventArgs e) {
-                NotifyPropertyChanged("VM_" + e.PropertyName);
+            flightModel.PropertyChanged += delegate (Object sender, PropertyChangedEventArgs e)
+            {
+                NotifyPropretyChanged("VM_" + e.PropertyName);
             };
             flightModel.connect("192.168.202.129", 5403);
             rudderElevator.X = 0;
@@ -26,11 +27,18 @@ namespace flight.ViewModel
             alieron = 0;
             flightModel.start();
         }
-
-        public void NotifyPropertyChanged(string propName) {
+        private void NotifyPropretyChanged(string propName)
+        {
             if (this.PropertyChanged != null)
+            {
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
+            }
         }
+
+        //public void NotifyPropertyChanged(string propName) {
+        //    if (this.PropertyChanged != null)
+        //        this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
+        //}
        
         public Point VM_RudderElevator
         {
@@ -72,56 +80,56 @@ namespace flight.ViewModel
 
 
 
-        public double IndicatedHeading
+        public double VM_IndicatedHeading
         {
             get
             {
                 return flightModel.IndicatedHeading;
             }
         }
-        public double GpsVertical
+        public double VM_GpsVertical
         {
             get
             {
                 return flightModel.GpsVertical;
             }
         }
-        public double GpsGround
+        public double VM_GpsGround
         {
             get
             {
                 return flightModel.GpsGround;
             }
         }
-        public double Airspeed
+        public double VM_Airspeed
         {
             get
             {
                 return flightModel.Airspeed;
             }
         }
-        public double GpsAltitude
+        public double VM_GpsAltitude
         {
             get
             {
                 return flightModel.GpsAltitude;
             }
         }
-        public double Pitch
+        public double VM_Pitch
         {
             get
             {
                 return flightModel.Pitch;
             }
         }
-        public double PitchDeg
+        public double VM_PitchDeg
         {
             get
             {
                 return flightModel.PitchDeg;
             }
         }
-        public double Altimeter
+        public double VM_Altimeter
         {
             get
             {
@@ -129,14 +137,14 @@ namespace flight.ViewModel
             }
         }
         //for map
-        public double LatitudeDeg
+        public double VM_LatitudeDeg
         {
             get
             {
                 return flightModel.LatitudeDeg;
             }
         }
-        public double LongitudeDeg
+        public double VM_LongitudeDeg
         {
             get
             {

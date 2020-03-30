@@ -45,9 +45,38 @@
         </local:Map>
 
 
-        <Label Grid.Column="1" HorizontalAlignment="Left" Margin="298,102,0,0"  VerticalAlignment="Top" Width="139" Height="33" FontSize="24"
-                 Content="{Binding VM_Efrat, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" >
-        </Label>
+        <Label Content="heading deg:" Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Left" FontSize="15"  FontFamily="Segoe UI Semilight" Foreground="Orange" Margin="134,13,45,0" Grid.Column="1"/>
+        <Label x:Name="Label1" Content="{Binding Path=VM_IndicatedHeading, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Center" FontSize="18" Foreground="Black" FontFamily="Segoe UI Semilight" Grid.Column="1" Height="28" Margin="293,9,83,0"/>
+
+        <Label Content="vertical:" Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Left" FontSize="15"  FontFamily="Segoe UI Semilight" Foreground="Orange" Margin="134,42,45,0" Grid.Column="1"/>
+        <Label x:Name="Label2" Content="{Binding Path=VM_GpsVertical, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Center" FontSize="18" Foreground="Black" FontFamily="Segoe UI Semilight" Grid.Column="1" Height="21" Margin="211,46,192,0"/>
+
+        <Label Content="ground-speed:" Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Left" FontSize="15"  FontFamily="Segoe UI Semilight" Foreground="Orange" Margin="132,72,47,0" Grid.Column="1"/>
+        <Label x:Name="Label3" Content="{Binding Path=VM_GpsGround, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Center" FontSize="18" Foreground="Black" FontFamily="Segoe UI Semilight" Grid.Column="1" Height="25" Margin="274,72,109,0"/>
+
+        <Label Content="airspeed speed:" Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Left" FontSize="15"  FontFamily="Segoe UI Semilight" Foreground="Orange" Margin="132,102,47,0" Grid.Column="1"/>
+        <Label x:Name="Label4" Content="{Binding Path=VM_Airspeed, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Center" FontSize="18" Foreground="Black" FontFamily="Segoe UI Semilight" Grid.Column="1" Height="19" Margin="262,114,109,0"/>
+
+        <Label Content="GPS altitude ft:" Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Left" FontSize="15"  FontFamily="Segoe UI Semilight" Foreground="Orange" Margin="132,133,47,0" Grid.Column="1"/>
+        <Label x:Name="Label5" Content="{Binding Path=VM_GpsAltitude, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Center" FontSize="18" Foreground="Black" FontFamily="Segoe UI Semilight" Grid.Column="1" Height="16" Margin="262,132,126,0"/>
+
+        <Label Content="roll-deg:" Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Left" FontSize="15"  FontFamily="Segoe UI Semilight" Foreground="Orange" Margin="132,157,47,0" Grid.Column="1"/>
+        <Label x:Name="Label6" Content="{Binding Path=VM_Pitch, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Center" FontSize="18" Foreground="Black" FontFamily="Segoe UI Semilight" Grid.Column="1" Height="22" Margin="248,163,160,0"/>
+
+        <Label Content="internal-pitch-deg:" Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Left" FontSize="15"  FontFamily="Segoe UI Semilight" Foreground="Orange" Margin="119,185,61,0" Grid.Column="1"/>
+        <Label x:Name="Label7" Content="{Binding Path=VM_PitchDeg, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Center" FontSize="18" Foreground="Black" FontFamily="Segoe UI Semilight" Grid.Column="1" Height="19" Margin="418,196,10,0"/>
+
+        <Label Content="altimeter altitudeb ft:" Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Left" FontSize="15"  FontFamily="Segoe UI Semilight" Foreground="Orange" Margin="103,215,78,0" Grid.Column="1"/>
+        <Label x:Name="Label8" Content="{Binding Path=VM_Altimeter, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Center" FontSize="18" Foreground="Black" FontFamily="Segoe UI Semilight" Grid.Column="1" Height="24" Margin="418,206,10,0"/>
+
+        <!-- for map -->
+        <Label Content="longitude-deg:" Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Left" FontSize="15"  FontFamily="Segoe UI Semilight" Foreground="Orange" Margin="31,33,520,0"/>
+        <Label x:Name="Label9" Content="{Binding Path=VM_LongitudeDeg, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Center" FontSize="18" Foreground="Black" FontFamily="Segoe UI Semilight" Height="21" Margin="159,46,576,0"/>
+
+        <Label Content="latitude-deg :" Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Left" FontSize="15"  FontFamily="Segoe UI Semilight" Foreground="Orange" Margin="31,68,520,0"/>
+        <Label x:Name="Label10" Content="{Binding Path=VM_LatitudeDeg, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Center" FontSize="18" Foreground="Black" FontFamily="Segoe UI Semilight" Height="34" Margin="206,72,526,0"/>
+
+
         <Slider x:Name="Throttle" Grid.Column="1" Value="{Binding VM_Throttle}"
                 HorizontalAlignment="Left" Margin="182,444,0,0" VerticalAlignment="Top" Width="190" Height="24" Maximum="1" Minimum="0" RenderTransformOrigin="0.5,0.5"
                 TickFrequency="0.1" TickPlacement="TopLeft" ValueChanged="SliderThrottle_ValueChanged">
