@@ -48,8 +48,6 @@ namespace flight
         {
             get 
             {
-                Console.WriteLine("Elevator " + Convert.ToDouble(GetValue(ElevatorProperty)) + "\n");
-
                 return Convert.ToDouble(GetValue(ElevatorProperty)); 
             }
             set { SetValue(ElevatorProperty, value); }
