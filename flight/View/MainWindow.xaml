@@ -20,7 +20,9 @@
         </Grid.RowDefinitions>
         <local:Map Grid.Column="0" Grid.RowSpan="2"/>
         <local:PrideBoard x:Name="MyPrideBoard" Grid.Column="2" Grid.Row="2"/>
-
+        <!--
+        <local:Dashboard x:Name="MyDashBoard" Grid.Column="2" Grid.Row="0"/>
+        -->
 
     </Grid>
     <!--

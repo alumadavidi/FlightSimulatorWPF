@@ -23,13 +23,14 @@ namespace flight
     public partial class MainWindow : Window
     {
         private FlightModel flightModel;
-        private FlightViewModel flightViewModel;
+        //private FlightViewModel flightViewModel;
         
         public MainWindow()
         {
             InitializeComponent();
             flightModel = new FlightModel(new TelnetClient());
-            MyPrideBoard.SetDataContext(flightModel);
+            //MyPrideBoard.SetDataContext(flightModel);
+            //MyDashBoard.SetDataContext(flightModel);
 
             //flightViewModel = new FlightViewModel(new FlightModel(new TelnetClient()));
             //DataContext = flightViewModel;
@@ -38,26 +39,11 @@ namespace flight
             //MyJoystick.setWindow(this);
 
         }
-        public FlightViewModel GetFlightViewModel()
-        {
-            return flightViewModel;
-        }
-
-
-
-
-        //private void SliderThrottle_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        //public FlightViewModel GetFlightViewModel()
         //{
-            
-        //    double value = Math.Round(Throttle.Value, 2);
-        //    ThrottleLabal.Content = Throttle.Name.ToString() + ": " + value.ToString();
+        //    return flightViewModel;
         //}
 
-        //private void SliderAileron_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        //{
-        //    double value = Math.Round(Aileron.Value, 2);
-        //    AileronLabal.Content = Aileron.Name.ToString() + ": " + value.ToString();
-        //}
 
         
     }
