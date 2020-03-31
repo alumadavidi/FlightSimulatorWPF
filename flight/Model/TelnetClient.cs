@@ -8,6 +8,20 @@ namespace flight.Model
 {
     public class TelnetClient : ITelnetClient
     {
+        private static TelnetClient telnetClient;
+        public static TelnetClient InstanceClient
+        {
+            get
+            {
+                if(telnetClient == null)
+                {
+                    telnetClient = new TelnetClient();
+                }
+                return telnetClient;
+                
+            } 
+        }
+
         private Socket sender;
         
         public void connect(string ip, int port)
@@ -17,6 +31,7 @@ namespace flight.Model
 
             try
             {
+
                 // Connect to a Remote server  
                 // Get Host IP Address that is used to establish a connection  
                 // In this case, we get one IP address of localhost that is IP : 127.0.0.1  

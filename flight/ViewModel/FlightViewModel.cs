@@ -1,4 +1,5 @@
 ﻿using flight.Model;
+using Microsoft.Maps.MapControl.WPF;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,6 +9,7 @@ namespace flight.ViewModel
 {
      public class FlightViewModel : INotifyPropertyChanged
     {
+        private Location location;
         private lFlightModel flightModel;
         private Point rudderElevator; // x - rudder, y - elevator
         private double throttle;
@@ -15,7 +17,7 @@ namespace flight.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
         public FlightViewModel(lFlightModel iFlight)
         {
-            this.flightModel = iFlight;
+            this.flightModel = new FlightModel(new TelnetClient());
             flightModel.PropertyChanged += delegate (Object sender, PropertyChangedEventArgs e)
             {
                 NotifyPropretyChanged("VM_" + e.PropertyName);
@@ -25,8 +27,10 @@ namespace flight.ViewModel
             rudderElevator.Y = 0;
             throttle = 0;
             alieron = 0;
-            flightModel.start();
+            flightModel.startGet();
         }
+       
+       
         private void NotifyPropretyChanged(string propName)
         {
             if (this.PropertyChanged != null)
@@ -39,7 +43,17 @@ namespace flight.ViewModel
         //    if (this.PropertyChanged != null)
         //        this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
         //}
-       
+        public Location VM_Location
+        {
+            get
+            {
+                return location;
+            }
+            set
+            {
+                location = value;
+            }
+        }
         public Point VM_RudderElevator
         {
             get
@@ -141,6 +155,7 @@ namespace flight.ViewModel
         {
             get
             {
+                location = new Location(flightModel.LongitudeDeg, flightModel.LatitudeDeg);
                 return flightModel.LatitudeDeg;
             }
         }
@@ -148,6 +163,7 @@ namespace flight.ViewModel
         {
             get
             {
+                location = new Location(flightModel.LongitudeDeg, flightModel.LatitudeDeg);
                 return flightModel.LongitudeDeg;
             }
         }

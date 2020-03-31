@@ -5,12 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    
     <Grid>
-        
         <Canvas  x:Name="Base" Margin="0" Width="340" Height="340">
-            
-            <Ellipse x:Name="OutsideCircle" HorizontalAlignment="Left" Height="340" VerticalAlignment="Top" Width="340">
+            <Ellipse HorizontalAlignment="Left" Height="340" VerticalAlignment="Top" Width="340">
                 <Ellipse.Fill>
                     <RadialGradientBrush>
                         <GradientStop Color="#FF2C2A2A" Offset="1" />
@@ -18,7 +15,7 @@
                     </RadialGradientBrush>
                 </Ellipse.Fill>
             </Ellipse>
-            <Ellipse x:Name="BigKnobBase" HorizontalAlignment="Left" Height="170" VerticalAlignment="Top" Width="170" Canvas.Left="84" Canvas.Top="84">
+            <Ellipse HorizontalAlignment="Left" Height="170" VerticalAlignment="Top" Width="170" Canvas.Left="84" Canvas.Top="84">
                 <Ellipse.Fill>
                     <RadialGradientBrush>
                         <GradientStop Color="#FF0E0E0E" Offset="1" />
@@ -50,7 +47,7 @@
                 </Path.RenderTransform>
             </Path>
 
-            <Canvas  x:Name="Knob" VerticalAlignment="Top" HorizontalAlignment="Left" Width="0" Height="0" RenderTransformOrigin="0.5,0.5" Canvas.Left="125" Canvas.Top="125" MouseDown="Knob_MouseDown" MouseMove="Knob_MouseMove" MouseLeftButtonUp="Knob_MouseLeftButtonUp" MouseLeave="Knob_MouseLeave">
+            <Canvas  x:Name="Knob" VerticalAlignment="Top" HorizontalAlignment="Left" Width="0" Height="0" RenderTransformOrigin="0.5,0.5" Canvas.Left="125" Canvas.Top="125">
                 <!--<Ellipse x:Name="Shadow" HorizontalAlignment="Left" Height="88" VerticalAlignment="Top" Width="86" Fill="#52131212" Canvas.Left="22" Canvas.Top="18" />-->
                 <Ellipse x:Name="KnobBase" HorizontalAlignment="Left" Height="90" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.5,0.5" Canvas.Top="1">
                     <Ellipse.Fill>

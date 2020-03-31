@@ -27,6 +27,7 @@ namespace flight.Model
         //for map
         private double latitudeDeg;
         private double longitudeDeg;
+        volatile private bool connected;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -38,6 +39,7 @@ namespace flight.Model
             initalizeSlidAdress();
             initializeAdressAdressDashboardr();
             sendToSim = new Queue<string>();
+            connected = false;
         }
         private void NotifyPropretyChanged(string propName)
         {
@@ -54,14 +56,20 @@ namespace flight.Model
 
         public void connect(string ip, int port)
         {
-            telnetClient.connect(ip, port);
+            // TODO: mutex?
+            if (!connected)
+            {
+                telnetClient.connect(ip, port);
+                connected = true;
+            }
         }
 
         public void disconnect()
         {
             telnetClient.disconnect();
+            connected = false;
         }
-        public void sendToSimulator()
+        public void startSet()
         {
             new Thread(delegate ()
             {
@@ -86,6 +94,10 @@ namespace flight.Model
             insertCommand(joystickAdress[0] + ru.ToString() + "\n");
             insertCommand(joystickAdress[1] + el.ToString() + "\n");
         }
+        public void updateControlParameter(string command)
+        {
+            insertCommand(command);
+        }
 
 
 
@@ -102,9 +114,9 @@ namespace flight.Model
             //telnetClient.read();
 
         }
-        public void start()
+        public void startGet()
         {
-            sendToSimulator();
+            //sendToSimulator();
             new Thread(delegate ()
             {
                 while (!stop) // 4 loops in second

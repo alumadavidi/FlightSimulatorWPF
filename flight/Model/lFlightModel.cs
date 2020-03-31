@@ -20,10 +20,11 @@ namespace flight.Model
 
         void connect(string ip, int port);
         void disconnect();
-        void start();
+        void startGet();
+        void startSet();
         //List<Double> ParamSim { set; get; }
         //int Efrat { get; set; }
-
+        void updateControlParameter(string command);
         void moveJoy(double ru, double el);
         void moveSlid(double th, double al);
     }
