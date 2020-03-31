@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="flight.DashBoard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:m="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
+             d:DesignHeight="500" d:DesignWidth="950">
+
+
+    <Grid>
+
+        <TextBlock HorizontalAlignment="Center" Text="DashBoard" TextWrapping="Wrap" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+            <TextBlock.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleX="6" ScaleY="6"/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </TextBlock.RenderTransform>
+        </TextBlock>
+
+        <Label Content="heading deg:" Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Left" FontSize="15"  FontFamily="Segoe UI Semilight" Foreground="Orange" Margin="134,13,45,0" Grid.Column="1"/>
+        <Label x:Name="Label1" Content="{Binding Path=VM_IndicatedHeading, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Center" FontSize="18" Foreground="#FFC91A1A" FontFamily="Segoe UI Semilight" Grid.Column="1" Height="28" Margin="91,59,92,0" Background="#FFD82121"/>
+
+    </Grid>
+
+
+</UserControl>

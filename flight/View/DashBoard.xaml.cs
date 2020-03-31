@@ -7,16 +7,15 @@ using System.Windows.Controls;
 
 namespace flight
 {
-    public partial class Map : UserControl
+    public partial class DashBoard : UserControl
     {
-        public Map()
+        public DashBoard()
         {
             InitializeComponent();
         }
-
         public void SetDataContext(FlightModel flightModel)
         {
-            DataContext = new MapViewModel(flightModel);
+            DataContext = new FlightViewModel(flightModel);
         }
     }
 }

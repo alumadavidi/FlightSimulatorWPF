@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Maps.MapControl.WPF;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
@@ -17,7 +18,7 @@ namespace flight.Model
         double Altimeter { get; set; }
         double LatitudeDeg { get; set; }
         double LongitudeDeg { get; set; }
-
+        Location LocationF { get; set; }
         void connect(string ip, int port);
         void disconnect();
         void startGet();

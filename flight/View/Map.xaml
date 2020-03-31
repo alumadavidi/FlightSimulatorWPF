@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              xmlns:m="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              d:DesignHeight="500" d:DesignWidth="950">
 
 
@@ -14,9 +15,12 @@
                ZoomLevel="12" Center="32.298705, 34.874000">
 
             <Canvas
-                m:MapLayer.Position ="32.298705, 34.874000" 
-                m:MapLayer.PositionOrigin="BottomCenter"  Width="30" Height="30" 
-                />
+                m:MapLayer.Position ="{Binding Path=VM_LocationF, UpdateSourceTrigger=PropertyChanged,
+                Mode=oneWay}"
+                m:MapLayer.PositionOrigin="BottomCenter"  Width="30" Height="30">
+                <materialDesign:PackIcon Kind="Flight" Width="30" Height="30"/>
+               
+            </Canvas>
         </m:Map>
     </Grid>
 

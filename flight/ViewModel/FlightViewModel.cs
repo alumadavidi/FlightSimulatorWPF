@@ -11,22 +11,22 @@ namespace flight.ViewModel
     {
         private Location location;
         private lFlightModel flightModel;
-        private Point rudderElevator; // x - rudder, y - elevator
-        private double throttle;
-        private double alieron;
+        //private Point rudderElevator; // x - rudder, y - elevator
+        //private double throttle;
+        //private double alieron;
         public event PropertyChangedEventHandler PropertyChanged;
         public FlightViewModel(lFlightModel iFlight)
         {
-            this.flightModel = new FlightModel(new TelnetClient());
+            this.flightModel = iFlight;
             flightModel.PropertyChanged += delegate (Object sender, PropertyChangedEventArgs e)
             {
                 NotifyPropretyChanged("VM_" + e.PropertyName);
             };
             flightModel.connect("192.168.202.129", 5403);
-            rudderElevator.X = 0;
-            rudderElevator.Y = 0;
-            throttle = 0;
-            alieron = 0;
+            //rudderElevator.X = 0;
+            //rudderElevator.Y = 0;
+            //throttle = 0;
+            //alieron = 0;
             flightModel.startGet();
         }
        
@@ -43,57 +43,53 @@ namespace flight.ViewModel
         //    if (this.PropertyChanged != null)
         //        this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
         //}
-        public Location VM_Location
-        {
-            get
-            {
-                return location;
-            }
-            set
-            {
-                location = value;
-            }
-        }
-        public Point VM_RudderElevator
-        {
-            get
-            {
-                return rudderElevator;
-            }
-            set
-            {
-                rudderElevator = value;
-                flightModel.moveJoy(rudderElevator.X, rudderElevator.Y);
-            }
-        }
+        
+        //public Point VM_RudderElevator
+        //{
+        //    get
+        //    {
+        //        return rudderElevator;
+        //    }
+        //    set
+        //    {
+        //        rudderElevator = value;
+        //        flightModel.moveJoy(rudderElevator.X, rudderElevator.Y);
+        //    }
+        //}
        
-        public double VM_Throttle
-        {
-            get
-            {
-                return throttle;
-            }
-            set
-            {
-                throttle = value;
-                flightModel.moveSlid(throttle, alieron);
-            }
-        }
-        public double VM_Aileron
-        {
-            get
-            {
-                return alieron;
-            }
-            set
-            {
-                alieron = value;
-                flightModel.moveSlid(throttle, alieron);
-            }
-        }
+        //public double VM_Throttle
+        //{
+        //    get
+        //    {
+        //        return throttle;
+        //    }
+        //    set
+        //    {
+        //        throttle = value;
+        //        flightModel.moveSlid(throttle, alieron);
+        //    }
+        //}
+        //public double VM_Aileron
+        //{
+        //    get
+        //    {
+        //        return alieron;
+        //    }
+        //    set
+        //    {
+        //        alieron = value;
+        //        flightModel.moveSlid(throttle, alieron);
+        //    }
+        //}
 
 
-
+        //public Location VM_Location
+        //{
+        //    get
+        //    {
+        //        return flightModel.LocationF;
+        //    }
+        //}
         public double VM_IndicatedHeading
         {
             get
@@ -150,22 +146,20 @@ namespace flight.ViewModel
                 return flightModel.Altimeter;
             }
         }
-        //for map
-        public double VM_LatitudeDeg
-        {
-            get
-            {
-                location = new Location(flightModel.LongitudeDeg, flightModel.LatitudeDeg);
-                return flightModel.LatitudeDeg;
-            }
-        }
-        public double VM_LongitudeDeg
-        {
-            get
-            {
-                location = new Location(flightModel.LongitudeDeg, flightModel.LatitudeDeg);
-                return flightModel.LongitudeDeg;
-            }
-        }
+        ////for map
+        //public double VM_LatitudeDeg
+        //{
+        //    get
+        //    {
+        //        return flightModel.LatitudeDeg;
+        //    }
+        //}
+        //public double VM_LongitudeDeg
+        //{
+        //    get
+        //    {
+        //        return flightModel.LongitudeDeg;
+        //    }
+        //}
     }
 }

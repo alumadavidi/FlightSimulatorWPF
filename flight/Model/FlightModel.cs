@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Maps.MapControl.WPF;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -27,7 +28,9 @@ namespace flight.Model
         //for map
         private double latitudeDeg;
         private double longitudeDeg;
-        volatile private bool connected;
+        private Location location;
+        private bool connected;
+        private readonly Mutex m = new Mutex();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -56,12 +59,23 @@ namespace flight.Model
 
         public void connect(string ip, int port)
         {
-            // TODO: mutex?
-            if (!connected)
+            m.WaitOne();
+            Console.WriteLine("enter to connect");
+            try
             {
-                telnetClient.connect(ip, port);
-                connected = true;
+                if (!connected)
+                {
+                    telnetClient.connect(ip, port);
+                    connected = true;
+                }
             }
+            finally
+            {
+                m.ReleaseMutex();
+                Console.WriteLine("exit ");
+            }
+            
+            
         }
 
         public void disconnect()
@@ -190,7 +204,18 @@ namespace flight.Model
                 "get /position/longitude-deg\n"
             };
         }
-
+        public Location LocationF
+        {
+            get
+            {
+                return location;
+            }
+            set
+            {
+                location = value;
+                NotifyPropretyChanged("LocationF");
+            }
+        }
         public double IndicatedHeading
         {
             get
@@ -200,6 +225,7 @@ namespace flight.Model
             set
             {
                 indicatedHeading = value;
+
                 NotifyPropretyChanged("IndicatedHeading");
             }
         }
@@ -297,6 +323,7 @@ namespace flight.Model
             {
                 latitudeDeg = value;
                 NotifyPropretyChanged("LatitudeDeg");
+                LocationF = new Location(LatitudeDeg, LongitudeDeg);
             }
         }
         public double LongitudeDeg
@@ -309,6 +336,8 @@ namespace flight.Model
             {
                 longitudeDeg = value;
                 NotifyPropretyChanged("LongitudeDeg");
+                LocationF = new Location(LatitudeDeg, LongitudeDeg);
+               
             }
         }
         

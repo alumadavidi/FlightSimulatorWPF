@@ -29,8 +29,9 @@ namespace flight
         {
             InitializeComponent();
             flightModel = new FlightModel(new TelnetClient());
-            //MyPrideBoard.SetDataContext(flightModel);
-            //MyDashBoard.SetDataContext(flightModel);
+            MyPrideBoard.SetDataContext(flightModel);
+            MyDashBoard.SetDataContext(flightModel);
+            MyMap.SetDataContext(flightModel);
 
             //flightViewModel = new FlightViewModel(new FlightModel(new TelnetClient()));
             //DataContext = flightViewModel;
