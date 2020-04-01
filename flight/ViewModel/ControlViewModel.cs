@@ -17,10 +17,6 @@ namespace flight.ViewModel
         {
             flightModel = iFlight;
             flightModel.connect("192.168.202.129", 5403);
-            //rudderElevator.X = 0;
-            //rudderElevator.Y = 0;
-            //throttle = 0;
-            //alieron = 0;
             flightModel.startSet();
         }
 
@@ -34,7 +30,6 @@ namespace flight.ViewModel
             {
                 rudder = value;
                 flightModel.updateControlParameter("set /controls/flight/rudder " + rudder + "\n");
-                //flightModel.moveJoy(rudderElevator.X, rudderElevator.Y);
             }
         }
         public double VM_Elevator
@@ -47,7 +42,6 @@ namespace flight.ViewModel
             {
                 elevator = value;
                 flightModel.updateControlParameter("set /controls/flight/elevator " + elevator + "\n");
-                //flightModel.moveJoy(rudderElevator.X, rudderElevator.Y);
             }
         }
 
@@ -62,7 +56,6 @@ namespace flight.ViewModel
                 throttle = value;
                 flightModel.updateControlParameter("set /controls/engines/current-engine/throttle " 
                     + throttle + "\n");
-                //flightModel.moveSlid(throttle, alieron);
             }
         }
         public double VM_Aileron
@@ -76,7 +69,6 @@ namespace flight.ViewModel
                 alieron = value;
                 flightModel.updateControlParameter("set /controls/flight/aileron "
                     + alieron + "\n");
-                //flightModel.moveSlid(throttle, alieron);
             }
         }
     }

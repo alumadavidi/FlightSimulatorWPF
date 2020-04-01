@@ -4,50 +4,49 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:flight"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="400">
+             d:DesignHeight="380" d:DesignWidth="450">
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="57*" />
-            <ColumnDefinition Width="143*" />
+            <ColumnDefinition Width="42*" />
+            <ColumnDefinition Width="49*"/>
+            <ColumnDefinition Width="309*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="4*" />
-            <RowDefinition />
+            <RowDefinition Height="80*" />
+            <RowDefinition Height="11*" />
+            <RowDefinition Height="9*"/>
 
         </Grid.RowDefinitions>
 
 
-        <local:Joystick x:Name="joystick" Grid.RowSpan="2" Grid.Column="1"
+        <local:Joystick x:Name="joystick" Grid.RowSpan="1" Grid.Column="2" Grid.ColumnSpan ="2" 
                             Rudder="{Binding VM_Rudder, Mode=OneWayToSource}"
-                            Elevator="{Binding VM_Elevator, Mode=OneWayToSource}" RenderTransformOrigin="0.5,0.5"  Margin="0,-25,0,45">
-
+                            Elevator="{Binding VM_Elevator, Mode=OneWayToSource}" RenderTransformOrigin="0.5,0.5">
             <local:Joystick.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform X="0" Y="0"/>
+                    <ScaleTransform ScaleX="0.8" ScaleY="0.8"/>
                 </TransformGroup>
             </local:Joystick.RenderTransform>
         </local:Joystick>
-
-        <!-- Aileron-->
-        <Slider x:Name="Aileron" Value="{Binding VM_Aileron ,StringFormat='0,0.'}"
+        <Slider x:Name="Aileron" Value="{Binding VM_Aileron ,StringFormat=0.0#}" RenderTransformOrigin="0.5,0.5"
                 TickFrequency="0.1" TickPlacement="TopLeft" ValueChanged="Slider_ValueChanged"
-                Maximum="1" Minimum="-1" HorizontalAlignment="Left" 
-                VerticalAlignment="Top" Width="170" RenderTransformOrigin="0.5,0.5" Margin="-18,109,0,0" Height="50" Grid.ColumnSpan="2">
-            <Slider.RenderTransform>
+                Maximum="1" Minimum="-1" HorizontalAlignment="Left" Width="250" Height="200"
+                VerticalAlignment="Top" Grid.ColumnSpan="3" Margin="-94,43,0,0">
+            <Slider.LayoutTransform>
                 <TransformGroup>
-                    <ScaleTransform ScaleX="1" ScaleY="1.5"/>
+                    <ScaleTransform/>
                     <SkewTransform/>
                     <RotateTransform Angle="90"/>
                     <TranslateTransform/>
                 </TransformGroup>
-            </Slider.RenderTransform>
+            </Slider.LayoutTransform>
         </Slider>
+        <TextBox x:Name="AileronValue" Text="{Binding ElementName=Aileron, Path=Value ,UpdateSourceTrigger=PropertyChanged ,StringFormat=0.0#}" HorizontalAlignment="Left" Margin="45,4,0,0" VerticalAlignment="Top" Foreground="#FFF6F6F9" FontSize="17"  Width="76" Cursor="Pen" IsEnabled="False" RenderTransformOrigin="0.5,0.5" Height="37" Grid.Row="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.ColumnSpan="3" FontFamily="Arial Black" BorderBrush="{x:Null}" Background="{x:Null}">
 
-        <Label x:Name="AileronValue" Content="{Binding ElementName=Aileron, Path=Value ,UpdateSourceTrigger=PropertyChanged ,StringFormat='0,0.'}" HorizontalAlignment="Left" Margin="-19,175,0,0" VerticalAlignment="Top" Foreground="Blue" FontSize="20"  Width="138" Cursor="Pen" IsEnabled="False" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="2" >
+        </TextBox>
+
+        <Label  Content="Aileron" HorizontalAlignment="Left" Margin="15,155,0,0" VerticalAlignment="Top" Foreground="#FFF4F4FB" FontSize="20"  Width="90" Cursor="None" IsEnabled="False" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="3" Height="38" FontFamily="Arial Black" >
             <Label.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -57,22 +56,40 @@
                 </TransformGroup>
             </Label.RenderTransform>
         </Label>
-        <Label  Content="Aileron" HorizontalAlignment="Left" Margin="-7,123,0,0" VerticalAlignment="Top" Foreground="Black" FontSize="20"  Width="76" Cursor="None" IsEnabled="False" RenderTransformOrigin="0.5,0.5" >
+
+
+        <Slider x:Name="Throttle" Value="{Binding VM_Throttle ,StringFormat=0.0#}"
+            Grid.Row="1" Grid.Column="2" RenderTransformOrigin="0.5,0.5"
+                TickFrequency="0.1" TickPlacement="TopLeft" ValueChanged="Slider_ValueChanged"
+                Maximum="1" Minimum="0" HorizontalAlignment="Left" Width="250" Height="200"
+                VerticalAlignment="Top" Margin="35,10,0,0" Grid.RowSpan="2"/>
+
+        <TextBox x:Name="ThrottleValue" Text="{Binding ElementName=Throttle, Path=Value ,UpdateSourceTrigger=PropertyChanged ,StringFormat=0.0#}" HorizontalAlignment="Left" Margin="285,5,0,0" VerticalAlignment="Top" Foreground="White" FontSize="17"  Width="53" Cursor="Pen" IsEnabled="False" RenderTransformOrigin="0.5,0.5" Grid.Column="2" Grid.RowSpan="2" Height="37" FontFamily="Arial Black" Background="{x:Null}" Grid.Row="1" BorderBrush="{x:Null}" >
+
+        </TextBox>
+        <Label  Content="Throttle" HorizontalAlignment="Left" Margin="114,32,0,0" VerticalAlignment="Top" FontSize="20"  Width="112" Cursor="None" IsEnabled="False" RenderTransformOrigin="0.5,0.5" Grid.Column="2"  Foreground="White" Grid.Row="1" Height="34" Grid.RowSpan="2" FontFamily="Arial Black"  >
             <Label.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
                     <SkewTransform/>
-                    <RotateTransform Angle="90.0"/>
                     <TranslateTransform/>
                 </TransformGroup>
             </Label.RenderTransform>
         </Label>
+
+        <!-- Aileron-->
+        <!--
+        
+        -->
+        <!--
+        
+        
 
 
         <Slider x:Name="Throttle" Value="{Binding VM_Throttle ,StringFormat='0,0.'}"
                 TickFrequency="0.1" TickPlacement="TopLeft" ValueChanged="Slider_ValueChanged"
                 Maximum="1" Minimum="0" HorizontalAlignment="Center" 
-                VerticalAlignment="Top" Width="170" RenderTransformOrigin="0.5,0.5" Height="50" Grid.Column="1" Margin="0,219,0,0" Grid.RowSpan="2">
+                VerticalAlignment="Center" Width="170" RenderTransformOrigin="0.5,0.5" Height="50" Grid.Column="2" Grid.Row="1">
             <Slider.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform ScaleX="1" ScaleY="1.5"/>
@@ -82,7 +99,7 @@
             </Slider.RenderTransform>
         </Slider>
 
-        <Label x:Name="ThrottleValue" Content="{Binding ElementName=Throttle, Path=Value ,UpdateSourceTrigger=PropertyChanged ,StringFormat='0,0.'}" HorizontalAlignment="Left" Margin="114,226,0,0" VerticalAlignment="Top" Foreground="Blue" FontSize="20"  Width="138" Cursor="Pen" IsEnabled="False" RenderTransformOrigin="0.5,0.5" Grid.Column="1" Grid.RowSpan="2" >
+        <Label x:Name="ThrottleValue" Content="{Binding ElementName=Throttle, Path=Value ,UpdateSourceTrigger=PropertyChanged ,StringFormat='0,0.'}" HorizontalAlignment="Left" Margin="114,226,0,0" VerticalAlignment="Top" Foreground="Blue" FontSize="20"  Width="138" Cursor="Pen" IsEnabled="False" RenderTransformOrigin="0.5,0.5" Grid.Column="2" Grid.RowSpan="2" Height="37" >
             <Label.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -91,7 +108,7 @@
                 </TransformGroup>
             </Label.RenderTransform>
         </Label>
-        <Label  Content="Throttle" HorizontalAlignment="Left" Margin="86,5,0,0" VerticalAlignment="Top" Foreground="Black" FontSize="20"  Width="94" Cursor="None" IsEnabled="False" RenderTransformOrigin="0.5,0.5" Grid.Column="1" Grid.Row="1" >
+        <Label  Content="Throttle" HorizontalAlignment="Left" Margin="86,0,0,0" VerticalAlignment="Center" Foreground="Black" FontSize="20"  Width="94" Cursor="None" IsEnabled="False" RenderTransformOrigin="0.5,0.5" Grid.Column="2" Grid.Row="2" Height="30" >
             <Label.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -102,7 +119,7 @@
         </Label>
 
 
-
+-->
 
     </Grid>
 </UserControl>

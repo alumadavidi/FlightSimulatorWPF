@@ -28,4 +28,10 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Page Update="View\Setteing.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
 </Project>

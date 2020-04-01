@@ -39,57 +39,7 @@ namespace flight.ViewModel
             }
         }
 
-        //public void NotifyPropertyChanged(string propName) {
-        //    if (this.PropertyChanged != null)
-        //        this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
-        //}
-        
-        //public Point VM_RudderElevator
-        //{
-        //    get
-        //    {
-        //        return rudderElevator;
-        //    }
-        //    set
-        //    {
-        //        rudderElevator = value;
-        //        flightModel.moveJoy(rudderElevator.X, rudderElevator.Y);
-        //    }
-        //}
-       
-        //public double VM_Throttle
-        //{
-        //    get
-        //    {
-        //        return throttle;
-        //    }
-        //    set
-        //    {
-        //        throttle = value;
-        //        flightModel.moveSlid(throttle, alieron);
-        //    }
-        //}
-        //public double VM_Aileron
-        //{
-        //    get
-        //    {
-        //        return alieron;
-        //    }
-        //    set
-        //    {
-        //        alieron = value;
-        //        flightModel.moveSlid(throttle, alieron);
-        //    }
-        //}
 
-
-        //public Location VM_Location
-        //{
-        //    get
-        //    {
-        //        return flightModel.LocationF;
-        //    }
-        //}
         public double VM_IndicatedHeading
         {
             get
@@ -146,20 +96,5 @@ namespace flight.ViewModel
                 return flightModel.Altimeter;
             }
         }
-        ////for map
-        //public double VM_LatitudeDeg
-        //{
-        //    get
-        //    {
-        //        return flightModel.LatitudeDeg;
-        //    }
-        //}
-        //public double VM_LongitudeDeg
-        //{
-        //    get
-        //    {
-        //        return flightModel.LongitudeDeg;
-        //    }
-        //}
     }
 }

@@ -5,24 +5,53 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              xmlns:m="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
-             d:DesignHeight="500" d:DesignWidth="950">
+             d:DesignHeight="160" d:DesignWidth="320">
 
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40*"/>
+            <RowDefinition Height="40*"/>
+            <RowDefinition Height="40*"/>
+            <RowDefinition Height="40*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="56*"/>
+            <ColumnDefinition Width="24*"/>
+            <ColumnDefinition Width="56*"/>
+            <ColumnDefinition Width="24*"/>
+        </Grid.ColumnDefinitions>
 
-        <TextBlock HorizontalAlignment="Center" Text="DashBoard" TextWrapping="Wrap" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
-            <TextBlock.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform ScaleX="6" ScaleY="6"/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </TextBlock.RenderTransform>
-        </TextBlock>
+        <Label Content="Heading deg" Grid.Column="0" VerticalAlignment="Center" HorizontalContentAlignment="Left" FontSize="13"  FontFamily="Arial Black" Foreground="White" Height="28" FontWeight="Bold"  />
+        <Label x:Name="Label1" Content="{Binding Path=VM_IndicatedHeading, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Grid.Column="1" VerticalAlignment="Center" HorizontalContentAlignment="Center" FontSize="13" Foreground="White" FontFamily="Arial Black"  Height="28"/>
 
-        <Label Content="heading deg:" Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Left" FontSize="15"  FontFamily="Segoe UI Semilight" Foreground="Orange" Margin="134,13,45,0" Grid.Column="1"/>
-        <Label x:Name="Label1" Content="{Binding Path=VM_IndicatedHeading, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  Grid.Row="0" VerticalAlignment="Top" HorizontalContentAlignment="Center" FontSize="18" Foreground="#FFC91A1A" FontFamily="Segoe UI Semilight" Grid.Column="1" Height="28" Margin="91,59,92,0" Background="#FFD82121"/>
+        <Label Content="Vertical" Grid.Column="2" VerticalAlignment="Center" HorizontalContentAlignment="Left" FontSize="13"  FontFamily="Arial Black" Foreground="White" Height="28" FontWeight="Bold"  />
+        <Label x:Name="Label2" Content="{Binding Path=VM_GpsVertical, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Grid.Column="3" VerticalAlignment="Center" HorizontalContentAlignment="Center" FontSize="13" Foreground="White" FontFamily="Arial Black"  Height="28" />
+
+
+        <Label Content="GroundSpeed" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalContentAlignment="Left" FontSize="13"  FontFamily="Arial Black" Foreground="White" Height="28" FontWeight="Bold"  />
+        <Label x:Name="Label3" Content="{Binding Path=VM_GpsGround, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalContentAlignment="Center" FontSize="13" Foreground="White" FontFamily="Arial Black"  Height="28"/>
+
+
+        <Label Content="Airspeed" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalContentAlignment="Left" FontSize="13"  FontFamily="Arial Black" Foreground="White" Height="28" FontWeight="Bold"  />
+        <Label x:Name="Label4" Content="{Binding Path=VM_Airspeed, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" HorizontalContentAlignment="Center" FontSize="13" Foreground="White" FontFamily="Arial Black"  Height="28" />
+
+
+        <Label Content="GPS altitude" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalContentAlignment="Left" FontSize="13"  FontFamily="Arial Black" Foreground="White" Height="28" FontWeight="Bold"  />
+        <Label x:Name="Label5" Content="{Binding Path=VM_GpsAltitude, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalContentAlignment="Center" FontSize="13" Foreground="White" FontFamily="Arial Black"  Height="28"/>
+
+
+        <Label Content="Roll-deg" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalContentAlignment="Left" FontSize="13"  FontFamily="Arial Black" Foreground="White" Height="28" FontWeight="Bold"  />
+        <Label x:Name="Label6" Content="{Binding Path=VM_Pitch, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  Grid.Row="2" Grid.Column="3" VerticalAlignment="Center" HorizontalContentAlignment="Center" FontSize="13" Foreground="White" FontFamily="Arial Black"  Height="28"/>
+
+
+        <Label Content="InternalPitch" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalContentAlignment="Left" FontSize="13"  FontFamily="Arial Black" Foreground="White" Height="28" FontWeight="Bold"  />
+        <Label x:Name="Label7" Content="{Binding Path=VM_PitchDeg, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalContentAlignment="Center" FontSize="13" Foreground="White" FontFamily="Arial Black"  Height="28"  />
+
+
+        <Label Content="Altimeter" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" HorizontalContentAlignment="Left" FontSize="13"  FontFamily="Arial Black" Foreground="White" Height="28" FontWeight="Bold"  />
+        <Label x:Name="Label8" Content="{Binding Path=VM_Altimeter, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  Grid.Row="3" Grid.Column="3" VerticalAlignment="Center" HorizontalContentAlignment="Center" FontSize="13" Foreground="White" FontFamily="Arial Black"  Height="28" />
+
 
     </Grid>
 

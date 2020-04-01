@@ -29,22 +29,14 @@ namespace flight
         {
             InitializeComponent();
             flightModel = new FlightModel(new TelnetClient());
-            MyPrideBoard.SetDataContext(flightModel);
-            MyDashBoard.SetDataContext(flightModel);
-            MyMap.SetDataContext(flightModel);
+            //MyPrideBoard.SetDataContext(flightModel);
+            //MyDashBoard.SetDataContext(flightModel);
+            //MyMap.SetDataContext(flightModel);
 
-            //flightViewModel = new FlightViewModel(new FlightModel(new TelnetClient()));
-            //DataContext = flightViewModel;
-            //ThrottleLabal.Content = Throttle.Name.ToString() + ": 0";
-            //AileronLabal.Content = Aileron.Name.ToString() + ": 0";
-            //MyJoystick.setWindow(this);
+           
 
         }
-        //public FlightViewModel GetFlightViewModel()
-        //{
-        //    return flightViewModel;
-        //}
-
+       
 
         
     }
