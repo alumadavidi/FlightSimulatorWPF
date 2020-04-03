@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -11,7 +12,8 @@ namespace flight.Model
     public class FlightModel : lFlightModel
     {
         private ITelnetClient telnetClient;
-        private volatile bool stop;
+        private volatile bool stopGet;
+        private volatile bool stopSet;
         private Queue<string> sendToSim;
         private List<string> joystickAdress;
         private List<string> sliderAdress;
@@ -29,15 +31,21 @@ namespace flight.Model
         private double latitudeDeg;
         private double longitudeDeg;
         private Location location;
+
+        private string error;
+
         private bool connected;
         private readonly Mutex m = new Mutex();
+        private readonly Mutex m1 = new Mutex();
+        
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public FlightModel(ITelnetClient tc)
         {
             telnetClient = tc;
-            stop = false;
+            stopGet = false;
+            stopSet = false;
             initalizeJoyAdress();
             initalizeSlidAdress();
             initializeAdressAdressDashboardr();
@@ -51,12 +59,7 @@ namespace flight.Model
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
         }
-        //public void NotifyPropertyChanged(string propName)
-        //{
-        //    if (this.PropertyChanged != null)
-        //        this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
-        //}
-
+       
         public void connect(string ip, int port)
         {
             m.WaitOne();
@@ -80,23 +83,35 @@ namespace flight.Model
 
         public void disconnect()
         {
+            m.WaitOne();
+            stopSet = true;
+            stopGet = true;
+            while(stopGet || stopSet)
+            {
+                Thread.Sleep(500);
+            }
             telnetClient.disconnect();
             connected = false;
+            m.ReleaseMutex();
         }
         public void startSet()
         {
             new Thread(delegate ()
             {
-                while (!stop)
+                while (!stopSet)
                 {
                     while (sendToSim.Count() > 0)
                     {
+                        m1.WaitOne();
                         telnetClient.write(sendToSim.Peek());
                         sendToSim.Dequeue();
                         telnetClient.read();
+                        m1.ReleaseMutex();
                     }
                 }
             }).Start();
+            stopSet = false;
+            Console.WriteLine("Set THREAD STOP");
         }
 
         public void insertCommand(string command)
@@ -119,55 +134,152 @@ namespace flight.Model
         {
             insertCommand(sliderAdress[0] + th.ToString() + "\n");
             insertCommand(sliderAdress[1] + al.ToString() + "\n");
-            //string sendToSim =
-            //   sliderAdress[0] + th.ToString() + "\n" +
-            //   sliderAdress[1] + al.ToString() + "\n";
-            //telnetClient.write(sendToSim);
-
-            //telnetClient.read();
-            //telnetClient.read();
-
         }
         public void startGet()
         {
             //sendToSimulator();
             new Thread(delegate ()
             {
-                while (!stop) // 4 loops in second
+                while (!stopGet) // 4 loops in second
                 {
+                   
+                    m1.WaitOne();
+                    //telnetClient.write("EFRAT\n");
                     telnetClient.write(adressDashboard[0]);
-                    IndicatedHeading = Convert.ToDouble(telnetClient.read());
+                    try
+                    {
+                        //telnetClient.read();
+                        telnetClient.read();
+                        //IndicatedHeading = Double.Parse(telnetClient.read());
+                        IndicatedHeading = Double.Parse("10");
+                    }
+                    catch (Exception e)
+                    {
+                        Error = "Invalid IndicatedHeading data from server";
+                    }
+                    m1.ReleaseMutex();
 
+
+                    m1.WaitOne();
                     telnetClient.write(adressDashboard[1]);
-                    GpsVertical = Convert.ToDouble(telnetClient.read());
+                    try
+                    {
+                        telnetClient.read();
+                        //GpsVertical = Double.Parse(telnetClient.read());
+                        GpsVertical = Double.Parse("e");
+                    }
+                    catch (Exception e)
+                    {
+                        Error = "Invalid GpsVertical data from server";
+                    }
+                    m1.ReleaseMutex();
 
+
+                    m1.WaitOne();
                     telnetClient.write(adressDashboard[2]);
-                    GpsGround = Convert.ToDouble(telnetClient.read());
+                    try
+                    {
+                        GpsGround = Double.Parse(telnetClient.read());
+                    }
+                    catch (Exception e)
+                    {
+                        Error = "Invalid GpsGround data from server";
+                    }
+                    m1.ReleaseMutex();
 
+                    m1.WaitOne();
                     telnetClient.write(adressDashboard[3]);
-                    Airspeed = Convert.ToDouble(telnetClient.read());
+                    try
+                    {
+                        Airspeed = Double.Parse(telnetClient.read());
+                    }
+                    catch (Exception e)
+                    {
+                        Error = "Invalid Airspeed data from server";
+                    }
+                    m1.ReleaseMutex();
 
+                    m1.WaitOne();
                     telnetClient.write(adressDashboard[4]);
-                    GpsAltitude = Convert.ToDouble(telnetClient.read());
+                    try
+                    {
+                        GpsAltitude = Double.Parse(telnetClient.read());
+                    }
+                    catch (Exception e)
+                    {
+                        Error = "Invalid GpsAltitude data from server";
+                    }
+                    m1.ReleaseMutex();
 
+                    m1.WaitOne();
                     telnetClient.write(adressDashboard[5]);
-                    Pitch = Convert.ToDouble(telnetClient.read());
+                    try
+                    {
+                        Pitch = Double.Parse(telnetClient.read());
+                    }
+                    catch (Exception e)
+                    {
+                        Error = "Invalid Pitch data from server";
+                    }
+                    m1.ReleaseMutex();
 
+                    m1.WaitOne();
                     telnetClient.write(adressDashboard[6]);
-                    PitchDeg = Convert.ToDouble(telnetClient.read());
+                    try
+                    {
+                        PitchDeg = Double.Parse(telnetClient.read());
+                    }
+                    catch (Exception e)
+                    {
+                        Error = "Invalid PitchDeg data from server";
+                    }
+                    m1.ReleaseMutex();
 
+                    m1.WaitOne();
                     telnetClient.write(adressDashboard[7]);
-                    Altimeter = Convert.ToDouble(telnetClient.read());
+                    try
+                    {
+                        Altimeter = Double.Parse(telnetClient.read());
+                    }
+                    catch (Exception e)
+                    {
+                        Error = "Invalid Altimeter data from server";
+                    }
+                    m1.ReleaseMutex();
 
+                    m1.WaitOne();
                     telnetClient.write(adressDashboard[8]);
-                    LatitudeDeg = Convert.ToDouble(telnetClient.read());
+                    try
+                    {
+                        LatitudeDeg = Double.Parse(telnetClient.read());
+                        //LatitudeDeg = Double.Parse("100");
+                    }
+                    catch (Exception e)
+                    {
+                        Error = "Invalid LatitudeDeg data from server";
+                    }
+                    m1.ReleaseMutex();
 
+                    m1.WaitOne();
                     telnetClient.write(adressDashboard[9]);
-                    LongitudeDeg = Convert.ToDouble(telnetClient.read());
-
+                    try
+                    {
+                        LongitudeDeg = Double.Parse(telnetClient.read());
+                    }
+                    catch (Exception e)
+                    {
+                        Error = "Invalid LongitudeDeg data from server";
+                    }
+                    m1.ReleaseMutex();
                     Thread.Sleep(250);
+                    
+                    
+                    
                 }
             }).Start();
+            //telnetClient.disconnect();
+            stopGet = false;
+            Console.WriteLine("GET THREAD STOP");
             //IndicatedHeading = 5;
 
         }
@@ -204,6 +316,35 @@ namespace flight.Model
                 "get /position/longitude-deg\n"
             };
         }
+       
+        private double setDataInCorrectRange(string data, double minValue, double maxValue, string name)
+        {
+            double num;
+            Double.TryParse(data, out num);
+            if(num > maxValue)
+            {
+                num = maxValue;
+                Error = name + " is out of range - rand down";
+            } else if(num < minValue)
+            {
+                num = minValue;
+                Error = name + " is out of range - rand up";
+            }
+            return num;
+        }
+        private bool locationValue()
+        {
+            bool valid = true;
+            if(LatitudeDeg >= 90 || LatitudeDeg <= -90 || LongitudeDeg <=-180 || LongitudeDeg >= 180)
+            {
+                valid = false;
+                disconnect();
+                Error = "The plane is out of map - the connection closed, try to reconnect.";
+            }
+            return valid;
+        }
+
+               
         public Location LocationF
         {
             get
@@ -212,20 +353,36 @@ namespace flight.Model
             }
             set
             {
-                location = value;
-                NotifyPropretyChanged("LocationF");
+                if (locationValue())
+                {
+                    location = value;
+                    NotifyPropretyChanged("LocationF");
+                }
+            }
+        }
+        public string Error
+        {
+            get
+            {
+                return error;
+            }
+            set
+            {
+                error = DateTime.Now.ToString("h:mm:ss") + " " + value;
+                NotifyPropretyChanged("Error");
+                //Thread.Sleep(500);
             }
         }
         public double IndicatedHeading
         {
             get
             {
+
                 return indicatedHeading;
             }
             set
             {
-                indicatedHeading = value;
-
+                indicatedHeading = Math.Round(setDataInCorrectRange(value.ToString(), 5, 7, "IndicatedHeading"), 2);
                 NotifyPropretyChanged("IndicatedHeading");
             }
         }
@@ -237,7 +394,7 @@ namespace flight.Model
             }
             set
             {
-                gpsVertical = value;
+                gpsVertical = Math.Round(setDataInCorrectRange(value.ToString(), 7, 9, "GpsVertical"), 2);
                 NotifyPropretyChanged("GpsVertical");
             }
         }
@@ -249,7 +406,7 @@ namespace flight.Model
             }
             set
             {
-                gpsGround = value;
+                gpsGround = Math.Round(setDataInCorrectRange(value.ToString(), 6, 8, "GpsGround"), 2);
                 NotifyPropretyChanged("GpsGround");
             }
         }
@@ -261,7 +418,7 @@ namespace flight.Model
             }
             set
             {
-                airspeed = value;
+                airspeed = Math.Round(setDataInCorrectRange(value.ToString(), 0, 2, "Airspeed"), 2);
                 NotifyPropretyChanged("Airspeed");
             }
         }
@@ -273,7 +430,7 @@ namespace flight.Model
             }
             set
             {
-                gpsAltitude = value;
+                gpsAltitude = Math.Round(setDataInCorrectRange(value.ToString(), 1, 3, "GpsAltitude"), 2);
                 NotifyPropretyChanged("GpsAltitude");
             }
         }
@@ -285,7 +442,7 @@ namespace flight.Model
             }
             set
             {
-                pitch = value;
+                pitch = Math.Round(setDataInCorrectRange(value.ToString(), 2, 4, "Pitch"), 2);
                 NotifyPropretyChanged("Pitch");
             }
         }
@@ -297,7 +454,7 @@ namespace flight.Model
             }
             set
             {
-                pitchDeg = value;
+                pitchDeg = Math.Round(setDataInCorrectRange(value.ToString(), 3, 5, "PitchDeg"), 2);
                 NotifyPropretyChanged("PitchDeg");
             }
         }
@@ -309,7 +466,7 @@ namespace flight.Model
             }
             set
             {
-                altimeter = value;
+                altimeter = Math.Round(setDataInCorrectRange(value.ToString(), 4, 6, "Altimeter"), 2);
                 NotifyPropretyChanged("Altimeter");
             }
         }
@@ -321,7 +478,8 @@ namespace flight.Model
             }
             set
             {
-                latitudeDeg = value;
+                
+                latitudeDeg = Math.Round(setDataInCorrectRange(value.ToString(), -90, 90, "LatitudeDeg"), 2);
                 NotifyPropretyChanged("LatitudeDeg");
                 LocationF = new Location(LatitudeDeg, LongitudeDeg);
             }
@@ -334,7 +492,7 @@ namespace flight.Model
             }
             set
             {
-                longitudeDeg = value;
+                longitudeDeg = Math.Round(setDataInCorrectRange(value.ToString(), -180, 180, "LongitudeDeg"),2);
                 NotifyPropretyChanged("LongitudeDeg");
                 LocationF = new Location(LatitudeDeg, LongitudeDeg);
                

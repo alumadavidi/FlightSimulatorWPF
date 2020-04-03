@@ -39,6 +39,14 @@ namespace flight.ViewModel
             }
         }
 
+        public string VM_Error
+        {
+            get
+            {
+                return flightModel.Error;
+            }
+
+        }
 
         public double VM_IndicatedHeading
         {

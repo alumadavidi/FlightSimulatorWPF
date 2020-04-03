@@ -7,7 +7,7 @@ using System.Text;
 
 namespace flight.ViewModel
 {
-    class MapViewModel : INotifyPropertyChanged
+    public class MapViewModel : INotifyPropertyChanged
     {
         private lFlightModel flightModel;
         public event PropertyChangedEventHandler PropertyChanged;

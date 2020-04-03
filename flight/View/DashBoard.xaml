@@ -10,10 +10,11 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40*"/>
-            <RowDefinition Height="40*"/>
-            <RowDefinition Height="40*"/>
-            <RowDefinition Height="40*"/>
+            <RowDefinition Height="25*"/>
+            <RowDefinition Height="25*"/>
+            <RowDefinition Height="25*"/>
+            <RowDefinition Height="25*"/>
+            <RowDefinition Height="22*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="56*"/>
@@ -51,6 +52,15 @@
 
         <Label Content="Altimeter" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" HorizontalContentAlignment="Left" FontSize="13"  FontFamily="Arial Black" Foreground="White" Height="28" FontWeight="Bold"  />
         <Label x:Name="Label8" Content="{Binding Path=VM_Altimeter, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  Grid.Row="3" Grid.Column="3" VerticalAlignment="Center" HorizontalContentAlignment="Center" FontSize="13" Foreground="White" FontFamily="Arial Black"  Height="28" />
+
+        <Label x:Name="Label9" Content="{Binding Path=VM_Error, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalContentAlignment="Center" FontSize="9" Foreground="White" FontFamily="Arial Black"  Height="28" Grid.ColumnSpan="4" >
+            <Label.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="#FF9FB806" Offset="1"/>
+                </LinearGradientBrush>
+            </Label.Background>
+        </Label>
 
 
     </Grid>

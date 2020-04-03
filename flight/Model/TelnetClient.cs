@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -43,6 +44,10 @@ namespace flight.Model
                 // Create a TCP/IP  socket.    
                 sender = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
+
+
+
+
                 // Connect the socket to the remote endpoint. Catch any errors.    
                 try
                 {
@@ -79,22 +84,31 @@ namespace flight.Model
 
         public string read()
         {
+            //try
+            //{
+            //    sender.ReceiveTimeout = 10000;
+                string lineFromSim = "";
 
-            string lineFromSim = "";
-
-            byte[] bytes = new byte[1024];
+                byte[] bytes = new byte[1024];
             // Receive the response from the remote device.    
-            try
+            if (sender.Poll(10000000, SelectMode.SelectRead))
             {
-                int bytesRec = sender.Receive(bytes);
-                Console.WriteLine("read " + Encoding.ASCII.GetString(bytes, 0, bytesRec));
-                lineFromSim = Encoding.ASCII.GetString(bytes, 0, bytesRec);
+                try
+                {
+                    int bytesRec = sender.Receive(bytes);
+                    Console.WriteLine("read " + Encoding.ASCII.GetString(bytes, 0, bytesRec));
+                    lineFromSim = Encoding.ASCII.GetString(bytes, 0, bytesRec);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("fail in read from simulator" + e.ToString());
+                }
             }
-            catch (Exception e)
+            else
             {
-                Console.WriteLine("fail in read from simulator" + e.ToString());
+                Console.WriteLine("timeout");
+                disconnect();
             }
-           
             return lineFromSim;
 
         }

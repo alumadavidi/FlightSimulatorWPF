@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Timers;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace flight
@@ -15,6 +17,11 @@ namespace flight
         public Setteing()
         {
             InitializeComponent();
+        }
+
+        public void SetDataContext(FlightModel flightModel)
+        {
+            DataContext = new ConnectViewModel(flightModel);
         }
 
         private bool validIp(string ip)
@@ -47,7 +54,13 @@ namespace flight
         {
             if (validPort(PortValue.Text) && validIp(IpValue.Text))
             {
-                //start server
+                Binding myBinding = new Binding();
+                myBinding.Source = DataContext;
+                myBinding.Path = new PropertyPath("VM_IP");
+                myBinding.Mode = BindingMode.OneWayToSource;
+                //myBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+                BindingOperations.SetBinding(IpValue, TextBox.TextProperty, myBinding);
+                //PortValue.SetBinding(VM_IP, );
             }
             else
             {

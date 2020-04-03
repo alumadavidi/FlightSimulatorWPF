@@ -29,11 +29,12 @@ namespace flight
         {
             InitializeComponent();
             flightModel = new FlightModel(new TelnetClient());
-            //MyPrideBoard.SetDataContext(flightModel);
-            //MyDashBoard.SetDataContext(flightModel);
-            //MyMap.SetDataContext(flightModel);
+            //MySetteing.SetDataContext(flightModel);
+            MyPrideBoard.SetDataContext(flightModel);
+            MyDashBoard.SetDataContext(flightModel);
+            MyMap.SetDataContext(flightModel);
 
-           
+
 
         }
        

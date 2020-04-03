@@ -19,6 +19,7 @@ namespace flight.Model
         double LatitudeDeg { get; set; }
         double LongitudeDeg { get; set; }
         Location LocationF { get; set; }
+        string Error { get; set; }
         void connect(string ip, int port);
         void disconnect();
         void startGet();
