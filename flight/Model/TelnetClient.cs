@@ -22,14 +22,14 @@ namespace flight.Model
                 
             } 
         }
-
+       
+       
         private Socket sender;
-        
+
+
+
         public void connect(string ip, int port)
         {
-
-            byte[] bytes = new byte[1024];
-
             try
             {
 
@@ -44,10 +44,6 @@ namespace flight.Model
                 // Create a TCP/IP  socket.    
                 sender = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
-
-
-
-
                 // Connect the socket to the remote endpoint. Catch any errors.    
                 try
                 {
@@ -56,30 +52,35 @@ namespace flight.Model
 
                     Console.WriteLine("Socket connected to {0}", sender.RemoteEndPoint.ToString());
                 }
-                catch (ArgumentNullException ane)
-                {
-                    Console.WriteLine("ArgumentNullException : {0}", ane.ToString());
-                }
-                catch (SocketException se)
-                {
-                    Console.WriteLine("SocketException : {0}", se.ToString());
-                }
                 catch (Exception e)
                 {
                     Console.WriteLine("Unexpected exception : {0}", e.ToString());
+                    throw new Exception();
+
                 }
 
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                throw new Exception();
             }
         }
         public void disconnect()
         {
             // Release the socket.    
-            sender.Shutdown(SocketShutdown.Both);
-            sender.Close();
+            try
+            {
+                sender.Shutdown(SocketShutdown.Both);
+            }
+            catch
+            {
+                
+            }
+            finally
+            {
+                sender.Close();
+            }
         }
 
         public string read()
@@ -90,30 +91,38 @@ namespace flight.Model
                 string lineFromSim = "";
 
                 byte[] bytes = new byte[1024];
-            // Receive the response from the remote device.    
-            if (sender.Poll(10000000, SelectMode.SelectRead))
+            // Receive the response from the remote device.  
+            try
             {
-                try
+                if (sender.Poll(10000000, SelectMode.SelectRead))
                 {
-                    int bytesRec = sender.Receive(bytes);
-                    Console.WriteLine("read " + Encoding.ASCII.GetString(bytes, 0, bytesRec));
-                    lineFromSim = Encoding.ASCII.GetString(bytes, 0, bytesRec);
+                    try
+                    {
+                        int bytesRec = sender.Receive(bytes);
+                        Console.WriteLine("read " + Encoding.ASCII.GetString(bytes, 0, bytesRec));
+                        lineFromSim = Encoding.ASCII.GetString(bytes, 0, bytesRec);
+                    }
+                    catch (Exception e)
+                    {
+                        
+                        Console.WriteLine("fail in read from simulator" + e.ToString());
+                    }
                 }
-                catch (Exception e)
+                else
                 {
-                    Console.WriteLine("fail in read from simulator" + e.ToString());
+                    Console.WriteLine("timeout");
                 }
-            }
-            else
+            } catch
             {
+               
                 Console.WriteLine("timeout");
-                disconnect();
             }
+            
             return lineFromSim;
 
         }
 
-        
+       
 
         public void write(string command)
         {

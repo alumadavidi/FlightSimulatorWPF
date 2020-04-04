@@ -21,11 +21,11 @@
             <ColumnDefinition Width="77*"/>
         </Grid.ColumnDefinitions>
         <Button x:Name="buttonClick" Grid.Column="2" Grid.Row="2" Content="Enter" FontFamily="Arial Black" FontWeight="Bold" FontSize="16" Foreground="#FFFDF9F9" BorderBrush="#FF191717" Background="#FFB8B3B3" VerticalAlignment="Top" Click="Button_Click" Height="22" Margin="0,4,0,0"/>
-        <TextBox x:Name="IP" Grid.Column="0" Text="Enter IP:" VerticalAlignment="Center" Height="18" Background="{x:Null}" Foreground="#FFFFFDFD" FontFamily="Arial Black" FontSize="14" FontWeight="Bold" BorderBrush="{x:Null}" />
+        <Label x:Name="IP" Grid.Column="0" Content="Enter IP:" VerticalAlignment="Center" Height="30" Background="{x:Null}" Foreground="#FFFFFDFD" FontFamily="Arial Black" FontSize="14" FontWeight="Bold" BorderBrush="{x:Null}" />
         <TextBox x:Name="IpValue" Grid.Column="1"  Background="White" FontFamily="Arial Black" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" Height="18"/>
-        <TextBox x:Name="PORT" Grid.Column="0" Grid.Row="1" Text="Enter Port:" VerticalAlignment="Center"  Height="18" Background="{x:Null}" Foreground="#FFFDF9F9" FontFamily="Arial Black" FontSize="16" FontWeight="Bold" BorderBrush="{x:Null}"/>
+        <Label x:Name="PORT" Grid.Column="0" Grid.Row="1" Content="Enter Port:" VerticalAlignment="Center"  Height="34" Background="{x:Null}" Foreground="#FFFDF9F9" FontFamily="Arial Black" FontSize="16" FontWeight="Bold" BorderBrush="{x:Null}"/>
         <TextBox x:Name="PortValue" Grid.Row="1" Grid.Column="1" Background="White" FontWeight="Bold" FontFamily="Arial Black" FontSize="14" VerticalAlignment="Center" Height="18" />
-        <TextBox x:Name="ValidOutput" Grid.Row="2" Grid.ColumnSpan="2" Background="{x:Null}" Foreground="White" VerticalAlignment="Center" BorderBrush="{x:Null}"/>
+        <Label x:Name="ValidOutput" Grid.Row="2" Grid.ColumnSpan="2" Background="{x:Null}" Foreground="White" VerticalAlignment="Center" BorderBrush="{x:Null}" Height="36"/>
 
     </Grid>
 

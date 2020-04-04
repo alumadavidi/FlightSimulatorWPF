@@ -12,22 +12,31 @@ using System.Windows.Input;
 
 namespace flight
 {
+   
     public partial class Setteing : UserControl
     {
+        private FlightViewModel _flightViewModel;
+        private string _ip;
+        private int _port;
         public Setteing()
         {
             InitializeComponent();
         }
 
-        public void SetDataContext(FlightModel flightModel)
+        public void SetDataContext(FlightViewModel flightViewModel)
         {
-            DataContext = new ConnectViewModel(flightModel);
+            _flightViewModel = flightViewModel;
+            DataContext = _flightViewModel;
         }
 
         private bool validIp(string ip)
         {
             bool match =
                 Regex.IsMatch(ip, "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
+            if (match)
+            {
+                _ip = ip;
+            }
             return match;
 
         }
@@ -46,6 +55,10 @@ namespace flight
             {
                 valid = true;
             }
+            if (valid)
+            {
+                _port = portNumber;
+            }
             return valid;
 
         }
@@ -54,17 +67,14 @@ namespace flight
         {
             if (validPort(PortValue.Text) && validIp(IpValue.Text))
             {
-                Binding myBinding = new Binding();
-                myBinding.Source = DataContext;
-                myBinding.Path = new PropertyPath("VM_IP");
-                myBinding.Mode = BindingMode.OneWayToSource;
-                //myBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-                BindingOperations.SetBinding(IpValue, TextBox.TextProperty, myBinding);
-                //PortValue.SetBinding(VM_IP, );
+                buttonClick.Visibility = Visibility.Hidden;
+                ValidOutput.Visibility = Visibility.Hidden;
+                _flightViewModel.connect(_ip, _port);
+
             }
             else
             {
-                ValidOutput.Text = "port or ip is unvalid.";
+                ValidOutput.Content = "port or ip is unvalid.";
             }
         }
     }

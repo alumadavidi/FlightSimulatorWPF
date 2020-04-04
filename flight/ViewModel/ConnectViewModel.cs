@@ -15,43 +15,18 @@ namespace flight.ViewModel
             port = 0;
             ip = "";
             flightModel = iFlight;
-            flightModel.connect("192.168.202.129", 5403);
+            
         }
-
-        public int VM_Port
+        public void connect(string ip, int port)
         {
-            get
+            try
             {
-                return port;
-            }
-            set
+                flightModel.connect("192.168.202.129", 5403);
+            } catch
             {
-                port = value;
-                if(VM_IP != "")
-                {
-                    flightModel.connect(VM_IP, VM_Port);
-                    ip = "";
-                    port = 0;
-                }
+
             }
         }
 
-        public string VM_IP
-        {
-            get
-            {
-                return ip;
-            }
-            set
-            {
-                ip = value;
-                if (VM_Port != 0)
-                {
-                    flightModel.connect(VM_IP, VM_Port);
-                    ip = "";
-                    port = 0;
-                }
-            }
-        }
     }
 }

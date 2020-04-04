@@ -16,7 +16,6 @@ namespace flight.ViewModel
         public ControlViewModel(lFlightModel iFlight)
         {
             flightModel = iFlight;
-            flightModel.connect("192.168.202.129", 5403);
             flightModel.startSet();
         }
 

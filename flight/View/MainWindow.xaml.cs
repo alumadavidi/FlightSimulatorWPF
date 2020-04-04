@@ -22,16 +22,17 @@ namespace flight
     /// </summary>
     public partial class MainWindow : Window
     {
-        private FlightModel flightModel;
+        private IFlightModel flightModel;
         //private FlightViewModel flightViewModel;
         
         public MainWindow()
         {
             InitializeComponent();
-            flightModel = new FlightModel(new TelnetClient());
-            //MySetteing.SetDataContext(flightModel);
+            flightModel = new IFlightModel(new TelnetClient());
+            FlightViewModel flightViewModel = new FlightViewModel(flightModel);
+            MySetteing.SetDataContext(flightViewModel);
+            MyDashBoard.SetDataContext(flightViewModel);
             MyPrideBoard.SetDataContext(flightModel);
-            MyDashBoard.SetDataContext(flightModel);
             MyMap.SetDataContext(flightModel);
 
 

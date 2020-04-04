@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace flight.Model
 {
-    public class FlightModel : lFlightModel
+    public class IFlightModel : lFlightModel
     {
         private ITelnetClient telnetClient;
         private volatile bool stopGet;
@@ -41,7 +41,7 @@ namespace flight.Model
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public FlightModel(ITelnetClient tc)
+        public IFlightModel(ITelnetClient tc)
         {
             telnetClient = tc;
             stopGet = false;
@@ -62,20 +62,25 @@ namespace flight.Model
        
         public void connect(string ip, int port)
         {
-            m.WaitOne();
-            Console.WriteLine("enter to connect");
+           
             try
             {
+                m.WaitOne();
+                Console.WriteLine("enter to connect");
                 if (!connected)
                 {
                     telnetClient.connect(ip, port);
                     connected = true;
                 }
-            }
-            finally
-            {
                 m.ReleaseMutex();
                 Console.WriteLine("exit ");
+            }
+           catch (Exception e)
+            {
+                Console.WriteLine("failed to connect");
+                Error = "can not connect to server";
+                disconnect();
+                throw new Exception();
             }
             
             
@@ -84,34 +89,39 @@ namespace flight.Model
         public void disconnect()
         {
             m.WaitOne();
-            stopSet = true;
-            stopGet = true;
-            while(stopGet || stopSet)
-            {
-                Thread.Sleep(500);
-            }
+            //stopSet = true;
+            //stopGet = true;
+            //while(stopGet || stopSet)
+            //{
+            //    Thread.Sleep(500);
+            //}
             telnetClient.disconnect();
             connected = false;
             m.ReleaseMutex();
         }
         public void startSet()
         {
+            
             new Thread(delegate ()
             {
                 while (!stopSet)
                 {
-                    while (sendToSim.Count() > 0)
+                    if (connected)
                     {
-                        m1.WaitOne();
-                        telnetClient.write(sendToSim.Peek());
-                        sendToSim.Dequeue();
-                        telnetClient.read();
-                        m1.ReleaseMutex();
+                        while (sendToSim.Count() > 0)
+                        {
+                            m1.WaitOne();
+                            telnetClient.write(sendToSim.Peek());
+                            sendToSim.Dequeue();
+                            telnetClient.read();
+                            m1.ReleaseMutex();
+                        }
                     }
                 }
             }).Start();
             stopSet = false;
             Console.WriteLine("Set THREAD STOP");
+            
         }
 
         public void insertCommand(string command)
@@ -125,7 +135,7 @@ namespace flight.Model
         }
         public void updateControlParameter(string command)
         {
-            insertCommand(command);
+            if (connected) { insertCommand(command); }
         }
 
 
@@ -148,10 +158,10 @@ namespace flight.Model
                     telnetClient.write(adressDashboard[0]);
                     try
                     {
+                        ////telnetClient.read();
                         //telnetClient.read();
-                        telnetClient.read();
-                        //IndicatedHeading = Double.Parse(telnetClient.read());
-                        IndicatedHeading = Double.Parse("10");
+                        IndicatedHeading = Double.Parse(telnetClient.read());
+                        //IndicatedHeading = Double.Parse("10");
                     }
                     catch (Exception e)
                     {
@@ -164,9 +174,9 @@ namespace flight.Model
                     telnetClient.write(adressDashboard[1]);
                     try
                     {
-                        telnetClient.read();
-                        //GpsVertical = Double.Parse(telnetClient.read());
-                        GpsVertical = Double.Parse("e");
+                        //telnetClient.read();
+                        GpsVertical = Double.Parse(telnetClient.read());
+                        //GpsVertical = Double.Parse("e");
                     }
                     catch (Exception e)
                     {
@@ -335,11 +345,10 @@ namespace flight.Model
         private bool locationValue()
         {
             bool valid = true;
-            if(LatitudeDeg >= 90 || LatitudeDeg <= -90 || LongitudeDeg <=-180 || LongitudeDeg >= 180)
+            if(LatitudeDeg >= 87 || LatitudeDeg <= -87 || LongitudeDeg <=-177 || LongitudeDeg >= 177)
             {
                 valid = false;
-                disconnect();
-                Error = "The plane is out of map - the connection closed, try to reconnect.";
+                Error = "The plane try to fly out of map";
             }
             return valid;
         }
@@ -478,10 +487,13 @@ namespace flight.Model
             }
             set
             {
-                
-                latitudeDeg = Math.Round(setDataInCorrectRange(value.ToString(), -90, 90, "LatitudeDeg"), 2);
-                NotifyPropretyChanged("LatitudeDeg");
-                LocationF = new Location(LatitudeDeg, LongitudeDeg);
+                if (specificLocationValue(LatitudeDeg, 87, -87, "LatitudeDeg"))
+                {
+                    latitudeDeg = Math.Round(value, 2);
+                    NotifyPropretyChanged("LatitudeDeg");
+                    LocationF = new Location(LatitudeDeg, LongitudeDeg);
+                }
+               
             }
         }
         public double LongitudeDeg
@@ -492,17 +504,27 @@ namespace flight.Model
             }
             set
             {
-                longitudeDeg = Math.Round(setDataInCorrectRange(value.ToString(), -180, 180, "LongitudeDeg"),2);
-                NotifyPropretyChanged("LongitudeDeg");
-                LocationF = new Location(LatitudeDeg, LongitudeDeg);
+               
+                if (specificLocationValue(LongitudeDeg, 177, -177, "LongitudeDeg"))
+                {
+                    longitudeDeg = Math.Round(value, 2);
+                    NotifyPropretyChanged("LongitudeDeg");
+                    LocationF = new Location(LatitudeDeg, LongitudeDeg);
+                }
+               
                
             }
         }
-        
 
-
-        
-
-       
+        private bool specificLocationValue(double num, double max, double min, string valueName)
+        {
+            bool valid = true;
+            if (num >= max || num <= min)
+            {
+                valid = false;
+                Error = valueName + " is out of range";
+            }
+            return valid;
+        }
     }
 }

@@ -9,27 +9,35 @@ namespace flight.ViewModel
 {
      public class FlightViewModel : INotifyPropertyChanged
     {
-        private Location location;
+
         private lFlightModel flightModel;
-        //private Point rudderElevator; // x - rudder, y - elevator
-        //private double throttle;
-        //private double alieron;
+
+
         public event PropertyChangedEventHandler PropertyChanged;
         public FlightViewModel(lFlightModel iFlight)
         {
             this.flightModel = iFlight;
+
             flightModel.PropertyChanged += delegate (Object sender, PropertyChangedEventArgs e)
             {
                 NotifyPropretyChanged("VM_" + e.PropertyName);
+                
             };
             flightModel.connect("192.168.202.129", 5403);
-            //rudderElevator.X = 0;
-            //rudderElevator.Y = 0;
-            //throttle = 0;
-            //alieron = 0;
             flightModel.startGet();
         }
-       
+       public void connect(string ip, int port)
+        {
+            try
+            {
+                //flightModel.connect(ip, port);
+                flightModel.connect("192.168.202.129", 5403);
+                flightModel.startGet();
+            } catch (Exception e)
+            {
+
+            }
+        }
        
         private void NotifyPropretyChanged(string propName)
         {

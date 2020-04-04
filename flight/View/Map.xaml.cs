@@ -14,7 +14,7 @@ namespace flight
             InitializeComponent();
         }
 
-        public void SetDataContext(FlightModel flightModel)
+        public void SetDataContext(IFlightModel flightModel)
         {
             DataContext = new MapViewModel(flightModel);
         }
