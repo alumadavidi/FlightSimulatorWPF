@@ -38,8 +38,10 @@ namespace flight
 
 
         }
-       
 
-        
+        private void MyMap_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

@@ -27,7 +27,7 @@
             <RowDefinition Height="382*" />
 
         </Grid.RowDefinitions>
-        <local:Map x:Name="MyMap" Grid.RowSpan="4" Grid.Column="0" Margin="0,77,0,0"/>
+        <local:Map x:Name="MyMap" Grid.RowSpan="4" Grid.Column="0" Margin="0,77,0,0" Loaded="MyMap_Loaded"/>
         <local:PrideBoard x:Name="MyPrideBoard" Grid.Row="2" Grid.ColumnSpan="1" Grid.Column="1" Margin="0,93,0,0" Grid.RowSpan="2" />
         <local:Setteing x:Name="MySetteing" Grid.ColumnSpan="1"  Grid.Row="0" Grid.Column="0"/>
         <local:DashBoard x:Name="MyDashBoard" Grid.Row="0" Grid.ColumnSpan="1" Grid.Column="1" Grid.RowSpan="3"/>

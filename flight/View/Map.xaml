@@ -10,20 +10,26 @@
 
 
     <Grid>
-<!--
-        <Label x:Name="Label8" Content="{Binding Path=VM_Altimeter, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" VerticalAlignment="Top" HorizontalContentAlignment="Center" FontSize="13" Foreground="Black" FontFamily="Arial Black"  Height="28" Margin="245,31,547,0" />
--->
+
+
         <m:Map x:Name="worldMap"  CredentialsProvider  =" t2VNjFPyqOf3gjgdytCi~76asZLDA9yuNF-BVNtc2yg~AutkYZM81waeTVYR4r9IZazm4907T2WbLo1sTtOWHxqmmXr6kVJHmf1xxiIVPsoi" Canvas.Top="10" Canvas.Left="10"
                ZoomLevel="12" Center="32.298705, 34.874000">
 
             <Canvas
+                
                 m:MapLayer.Position ="{Binding Path=VM_LocationF, UpdateSourceTrigger=PropertyChanged,
                 Mode=oneWay}"
                 m:MapLayer.PositionOrigin="BottomCenter"  Width="30" Height="30">
                 <materialDesign:PackIcon Kind="Flight" Width="30" Height="30"/>
+                <Label x:Name="LabelX" Content="{Binding Path=VM_LatitudeDeg, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" HorizontalContentAlignment="Center" FontSize="13" Foreground="Black" FontFamily="Arial Black"  Height="28" Margin="245,31,647,0" Background="#FFDAD119" Canvas.Left="-478" Canvas.Top="-234" Width="79" />
 
+               
             </Canvas>
+
+            <Label x:Name="LabelY" Content="{Binding Path=VM_LongitudeDeg, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" HorizontalContentAlignment="Center" FontSize="13" Foreground="#FF0C0000" FontFamily="Arial Black"  Height="28" Margin="313,31,578,0" Background="#FF1AC932" Canvas.Left="-452" Canvas.Top="-231" Width="88" />
+
         </m:Map>
+
     </Grid>
 
 
