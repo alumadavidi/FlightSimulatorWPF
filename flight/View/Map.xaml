@@ -21,8 +21,10 @@
                 Mode=oneWay}"
                 m:MapLayer.PositionOrigin="BottomCenter"  Width="30" Height="30">
                 <materialDesign:PackIcon Kind="Flight" Width="30" Height="30"/>
+                <!--
                 <Label x:Name="LabelX" Content="{Binding Path=VM_LatitudeDeg, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" HorizontalContentAlignment="Center" FontSize="13" Foreground="Black" FontFamily="Arial Black"  Height="28" Margin="258,5,647,0" Background="#FFDAD119" Width="79" Canvas.Left="-324" Canvas.Top="-171" />
                 <Label x:Name="LabelY" Content="{Binding Path=VM_LongitudeDeg, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" HorizontalContentAlignment="Center" FontSize="13" Foreground="#FF0C0000" FontFamily="Arial Black"  Height="28" Margin="313,22,578,0" Background="#FF1AC932" Width="88" Canvas.Left="-299" Canvas.Top="-188" />
+                -->
 
 
             </Canvas>

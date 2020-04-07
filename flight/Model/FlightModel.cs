@@ -67,14 +67,14 @@ namespace flight.Model
             try
             {
                 m.WaitOne();
-                Console.WriteLine("enter to connect");
+                //Console.WriteLine("enter to connect");
                 if (!connected)
                 {
                     tcpTimeClient.Connect(ip, port);
                     connected = true;
                 }
                 m.ReleaseMutex();
-                Console.WriteLine("exit ");
+                //Console.WriteLine("exit ");
             }
            catch (Exception e)
             {
@@ -111,7 +111,7 @@ namespace flight.Model
                 }
             }).Start();
             stopSet = false;
-            Console.WriteLine("Set THREAD STOP");
+            //Console.WriteLine("Set THREAD STOP");
             
         }
 
@@ -149,7 +149,7 @@ namespace flight.Model
                     tcpTimeClient.write(adressDashboard[0]);
                     try
                     {
-                        ////telnetClient.read();
+                        ////tcpTimeClient.read();
                         //telnetClient.read();
                         IndicatedHeading = Double.Parse(tcpTimeClient.read());
                         //IndicatedHeading = Double.Parse("10");
@@ -172,7 +172,7 @@ namespace flight.Model
                     {
                         //telnetClient.read();
                         GpsVertical = Double.Parse(tcpTimeClient.read());
-                      
+
                         //GpsVertical = Double.Parse("e");
                     }
                     catch (TimeoutException te)
@@ -333,7 +333,7 @@ namespace flight.Model
                 }
             }).Start();
             stopGet = false;
-            Console.WriteLine("GET THREAD STOP");
+            //Console.WriteLine("GET THREAD STOP");
         }
         private void initalizeJoyAdress()
         {
@@ -387,7 +387,7 @@ namespace flight.Model
         private bool locationValue()
         {
             bool valid = true;
-            if(LatitudeDeg >= 87 || LatitudeDeg <= -87 || LongitudeDeg <=-177 || LongitudeDeg >= 177)
+            if(LatitudeDeg >= 85 || LatitudeDeg <= -85 || LongitudeDeg <=-177 || LongitudeDeg >= 177)
             {
                 valid = false;
                 Error = "The plane try to fly out of map";
@@ -530,7 +530,7 @@ namespace flight.Model
             }
             set
             {
-                if (specificLocationValue(LatitudeDeg, 87, -87, "LatitudeDeg"))
+                if (specificLocationValue(LatitudeDeg, 85, -85, "LatitudeDeg"))
                 {
                     latitudeDeg = Math.Round(value, 2);
                     NotifyPropretyChanged("LatitudeDeg");

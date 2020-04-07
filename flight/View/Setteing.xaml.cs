@@ -22,7 +22,7 @@ namespace flight
         public Setteing()
         {
             InitializeComponent();
-            IpValue.Text = ConfigurationManager.AppSettings["ip"].ToString(); 
+            IpValue.Text = ConfigurationManager.AppSettings["ip"].ToString();
             PortValue.Text = ConfigurationManager.AppSettings["port"].ToString();
         }
 
@@ -66,7 +66,7 @@ namespace flight
 
         }
 
-        private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
             if (validPort(PortValue.Text) && validIp(IpValue.Text))
             {

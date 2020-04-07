@@ -61,6 +61,7 @@ namespace flight.Model
                 int k = client.GetStream().Read(bb, 0, 100);
                 for (int i = 0; i < k; i++)
                     massage += (Convert.ToChar(bb[i]));
+                Console.WriteLine("read " + massage);
             }
             //
             catch (Exception e)

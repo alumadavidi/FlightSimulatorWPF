@@ -30,10 +30,12 @@ namespace flight
             InitializeComponent();
             flightModel = new IFlightModel(new TcpTimeClient(10000));
             FlightViewModel flightViewModel = new FlightViewModel(flightModel);
+            MapViewModel mapViewModel = new MapViewModel(flightModel);
             MySetteing.SetDataContext(flightViewModel);
             MyDashBoard.SetDataContext(flightViewModel);
             MyPrideBoard.SetDataContext(flightModel);
-            MyMap.SetDataContext(flightModel);
+            MyMap.SetDataContext(mapViewModel);
+            MyLocation.SetDataContext(mapViewModel);
 
 
 
