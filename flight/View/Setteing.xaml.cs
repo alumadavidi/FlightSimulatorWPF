@@ -2,6 +2,7 @@
 using flight.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Timers;
@@ -21,6 +22,8 @@ namespace flight
         public Setteing()
         {
             InitializeComponent();
+            IpValue.Text = ConfigurationManager.AppSettings["ip"].ToString(); 
+            PortValue.Text = ConfigurationManager.AppSettings["port"].ToString();
         }
 
         public void SetDataContext(FlightViewModel flightViewModel)

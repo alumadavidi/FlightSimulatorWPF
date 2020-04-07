@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="flight.PlainLocation"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:m="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
+             d:DesignHeight="500" d:DesignWidth="950">
+
+    <Grid>
+
+      
+
+        <Label x:Name="LabelY" Content="{Binding Path=VM_LongitudeDeg, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" HorizontalContentAlignment="Center" FontSize="13" Foreground="#FF0C0000" FontFamily="Arial Black"  Height="28" Margin="10,0,852,472" Background="#FF1AC932" Canvas.Left="-452" Canvas.Top="-231" Width="88" />
+        <Label x:Name="LabelX" Content="{Binding Path=VM_LatitudeDeg, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" HorizontalContentAlignment="Center" FontSize="13" Foreground="Black" FontFamily="Arial Black"  Height="28" Margin="103,0,768,472" Background="#FFDAD119" Canvas.Left="-478" Canvas.Top="-234" Width="79" />
+
+
+
+    </Grid>
+
+
+</UserControl>

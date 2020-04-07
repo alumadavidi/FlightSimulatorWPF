@@ -28,7 +28,7 @@ namespace flight
         public MainWindow()
         {
             InitializeComponent();
-            flightModel = new IFlightModel(new TelnetClient());
+            flightModel = new IFlightModel(new TcpTimeClient(10000));
             FlightViewModel flightViewModel = new FlightViewModel(flightModel);
             MySetteing.SetDataContext(flightViewModel);
             MyDashBoard.SetDataContext(flightViewModel);

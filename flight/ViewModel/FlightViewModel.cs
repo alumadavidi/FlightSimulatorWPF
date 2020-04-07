@@ -23,19 +23,16 @@ namespace flight.ViewModel
                 NotifyPropretyChanged("VM_" + e.PropertyName);
                 
             };
-            flightModel.connect("192.168.202.129", 5403);
-            flightModel.startGet();
         }
        public void connect(string ip, int port)
         {
             try
             {
-                //flightModel.connect(ip, port);
-                flightModel.connect("192.168.202.129", 5403);
+                flightModel.Connect(ip, port);
                 flightModel.startGet();
             } catch (Exception e)
             {
-
+                flightModel.Error = "failed to connect to server";
             }
         }
        

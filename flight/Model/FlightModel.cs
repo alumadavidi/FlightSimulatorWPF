@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
@@ -11,7 +12,7 @@ namespace flight.Model
 {
     public class IFlightModel : lFlightModel
     {
-        private ITelnetClient telnetClient;
+        private ITcpTimeClient  tcpTimeClient;
         private volatile bool stopGet;
         private volatile bool stopSet;
         private Queue<string> sendToSim;
@@ -31,8 +32,8 @@ namespace flight.Model
         private double latitudeDeg;
         private double longitudeDeg;
         private Location location;
-
         private string error;
+        private Thread thread;
 
         private bool connected;
         private readonly Mutex m = new Mutex();
@@ -41,9 +42,9 @@ namespace flight.Model
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public IFlightModel(ITelnetClient tc)
+        public IFlightModel(ITcpTimeClient tc)
         {
-            telnetClient = tc;
+            tcpTimeClient = tc;
             stopGet = false;
             stopSet = false;
             initalizeJoyAdress();
@@ -51,6 +52,7 @@ namespace flight.Model
             initializeAdressAdressDashboardr();
             sendToSim = new Queue<string>();
             connected = false;
+
         }
         private void NotifyPropretyChanged(string propName)
         {
@@ -60,16 +62,15 @@ namespace flight.Model
             }
         }
        
-        public void connect(string ip, int port)
+        public void Connect(string ip, int port)
         {
-           
             try
             {
                 m.WaitOne();
                 Console.WriteLine("enter to connect");
                 if (!connected)
                 {
-                    telnetClient.connect(ip, port);
+                    tcpTimeClient.Connect(ip, port);
                     connected = true;
                 }
                 m.ReleaseMutex();
@@ -77,25 +78,15 @@ namespace flight.Model
             }
            catch (Exception e)
             {
-                Console.WriteLine("failed to connect");
-                Error = "can not connect to server";
-                disconnect();
                 throw new Exception();
             }
-            
             
         }
 
         public void disconnect()
         {
             m.WaitOne();
-            //stopSet = true;
-            //stopGet = true;
-            //while(stopGet || stopSet)
-            //{
-            //    Thread.Sleep(500);
-            //}
-            telnetClient.disconnect();
+            tcpTimeClient.disconnect();
             connected = false;
             m.ReleaseMutex();
         }
@@ -111,9 +102,9 @@ namespace flight.Model
                         while (sendToSim.Count() > 0)
                         {
                             m1.WaitOne();
-                            telnetClient.write(sendToSim.Peek());
+                            tcpTimeClient.write(sendToSim.Peek());
                             sendToSim.Dequeue();
-                            telnetClient.read();
+                            tcpTimeClient.read();
                             m1.ReleaseMutex();
                         }
                     }
@@ -155,143 +146,194 @@ namespace flight.Model
                    
                     m1.WaitOne();
                     //telnetClient.write("EFRAT\n");
-                    telnetClient.write(adressDashboard[0]);
+                    tcpTimeClient.write(adressDashboard[0]);
                     try
                     {
                         ////telnetClient.read();
                         //telnetClient.read();
-                        IndicatedHeading = Double.Parse(telnetClient.read());
+                        IndicatedHeading = Double.Parse(tcpTimeClient.read());
                         //IndicatedHeading = Double.Parse("10");
+                    }
+                    catch (TimeoutException te)
+                    {
+                        Error = "Timeout";
                     }
                     catch (Exception e)
                     {
                         Error = "Invalid IndicatedHeading data from server";
+                       
                     }
                     m1.ReleaseMutex();
 
 
                     m1.WaitOne();
-                    telnetClient.write(adressDashboard[1]);
+                    tcpTimeClient.write(adressDashboard[1]);
                     try
                     {
                         //telnetClient.read();
-                        GpsVertical = Double.Parse(telnetClient.read());
+                        GpsVertical = Double.Parse(tcpTimeClient.read());
+                      
                         //GpsVertical = Double.Parse("e");
                     }
+                    catch (TimeoutException te)
+                    {
+                        Error = "Timeout";
+                    }
+                    
                     catch (Exception e)
                     {
                         Error = "Invalid GpsVertical data from server";
+                        
                     }
                     m1.ReleaseMutex();
 
 
                     m1.WaitOne();
-                    telnetClient.write(adressDashboard[2]);
+                    tcpTimeClient.write(adressDashboard[2]);
                     try
                     {
-                        GpsGround = Double.Parse(telnetClient.read());
+                        GpsGround = Double.Parse(tcpTimeClient.read());
+                    }
+                    catch (TimeoutException te)
+                    {
+                        Error = "Timeout";
                     }
                     catch (Exception e)
                     {
                         Error = "Invalid GpsGround data from server";
+                        
                     }
                     m1.ReleaseMutex();
 
                     m1.WaitOne();
-                    telnetClient.write(adressDashboard[3]);
+                    tcpTimeClient.write(adressDashboard[3]);
                     try
                     {
-                        Airspeed = Double.Parse(telnetClient.read());
+                        Airspeed = Double.Parse(tcpTimeClient.read());
+                    }
+                    catch (TimeoutException te)
+                    {
+                        Error = "Timeout";
                     }
                     catch (Exception e)
                     {
                         Error = "Invalid Airspeed data from server";
+                        
                     }
                     m1.ReleaseMutex();
 
                     m1.WaitOne();
-                    telnetClient.write(adressDashboard[4]);
+                    tcpTimeClient.write(adressDashboard[4]);
                     try
                     {
-                        GpsAltitude = Double.Parse(telnetClient.read());
+                        GpsAltitude = Double.Parse(tcpTimeClient.read());
+                    }
+                   
+                    catch (TimeoutException te)
+                    {
+                        Error = "Timeout";
                     }
                     catch (Exception e)
                     {
                         Error = "Invalid GpsAltitude data from server";
+                        
+
                     }
                     m1.ReleaseMutex();
 
                     m1.WaitOne();
-                    telnetClient.write(adressDashboard[5]);
+                    tcpTimeClient.write(adressDashboard[5]);
                     try
                     {
-                        Pitch = Double.Parse(telnetClient.read());
+                        Pitch = Double.Parse(tcpTimeClient.read());
+                    }
+                    catch (TimeoutException te)
+                    {
+                        Error = "Timeout";
                     }
                     catch (Exception e)
                     {
                         Error = "Invalid Pitch data from server";
+                        
                     }
                     m1.ReleaseMutex();
 
                     m1.WaitOne();
-                    telnetClient.write(adressDashboard[6]);
+                    tcpTimeClient.write(adressDashboard[6]);
                     try
                     {
-                        PitchDeg = Double.Parse(telnetClient.read());
+                        PitchDeg = Double.Parse(tcpTimeClient.read());
+                    }
+                    catch (TimeoutException te)
+                    {
+                        Error = "Timeout";
                     }
                     catch (Exception e)
                     {
                         Error = "Invalid PitchDeg data from server";
+                        
                     }
                     m1.ReleaseMutex();
 
                     m1.WaitOne();
-                    telnetClient.write(adressDashboard[7]);
+                    tcpTimeClient.write(adressDashboard[7]);
                     try
                     {
-                        Altimeter = Double.Parse(telnetClient.read());
+                        Altimeter = Double.Parse(tcpTimeClient.read());
+                    }
+                    catch (TimeoutException te)
+                    {
+                        Error = "Timeout";
                     }
                     catch (Exception e)
                     {
                         Error = "Invalid Altimeter data from server";
+                        
+
                     }
                     m1.ReleaseMutex();
 
                     m1.WaitOne();
-                    telnetClient.write(adressDashboard[8]);
+                    tcpTimeClient.write(adressDashboard[8]);
                     try
                     {
-                        LatitudeDeg = Double.Parse(telnetClient.read());
+                        LatitudeDeg = Double.Parse(tcpTimeClient.read());
                         //LatitudeDeg = Double.Parse("100");
+                    }
+                    catch (TimeoutException te)
+                    {
+                        Error = "Timeout";
                     }
                     catch (Exception e)
                     {
                         Error = "Invalid LatitudeDeg data from server";
+                        
+
                     }
                     m1.ReleaseMutex();
 
                     m1.WaitOne();
-                    telnetClient.write(adressDashboard[9]);
+                    tcpTimeClient.write(adressDashboard[9]);
                     try
                     {
-                        LongitudeDeg = Double.Parse(telnetClient.read());
+                        LongitudeDeg = Double.Parse(tcpTimeClient.read());
+                    }
+                    catch (TimeoutException te)
+                    {
+                        Error = "Timeout";
                     }
                     catch (Exception e)
                     {
                         Error = "Invalid LongitudeDeg data from server";
+                        
+
                     }
                     m1.ReleaseMutex();
                     Thread.Sleep(250);
-                    
-                    
-                    
                 }
             }).Start();
-            //telnetClient.disconnect();
             stopGet = false;
             Console.WriteLine("GET THREAD STOP");
-            //IndicatedHeading = 5;
-
         }
         private void initalizeJoyAdress()
         {
@@ -379,7 +421,8 @@ namespace flight.Model
             {
                 error = DateTime.Now.ToString("h:mm:ss") + " " + value;
                 NotifyPropretyChanged("Error");
-                //Thread.Sleep(500);
+                System.Threading.Thread.Sleep(1000);
+
             }
         }
         public double IndicatedHeading
