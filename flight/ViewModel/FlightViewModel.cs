@@ -35,7 +35,19 @@ namespace flight.ViewModel
                 flightModel.Error = "failed to connect to server";
             }
         }
-       
+
+        internal void disconnect()
+        {
+            try
+            {
+                flightModel.disconnect();
+            }
+            catch (Exception e)
+            {
+                flightModel.Error = "failed to disconnect from server";
+            }
+        }
+
         private void NotifyPropretyChanged(string propName)
         {
             if (this.PropertyChanged != null)

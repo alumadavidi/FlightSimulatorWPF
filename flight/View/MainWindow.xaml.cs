@@ -36,6 +36,7 @@ namespace flight
             MyPrideBoard.SetDataContext(flightModel);
             MyMap.SetDataContext(mapViewModel);
             MyLocation.SetDataContext(mapViewModel);
+            MyExitButton.SetDataContext(flightViewModel);
 
 
 

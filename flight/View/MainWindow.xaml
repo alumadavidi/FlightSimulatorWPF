@@ -32,7 +32,8 @@
 
         <local:Setteing x:Name="MySetteing" Grid.ColumnSpan="1"  Grid.Row="0" Grid.Column="0"/>
         <local:DashBoard x:Name="MyDashBoard" Grid.Row="0" Grid.ColumnSpan="1" Grid.Column="1" Grid.RowSpan="3"/>
-        <local:PlainLocation x:Name="MyLocation" Grid.RowSpan="4" Grid.Column="0" Margin="0,77,0,0"/>
+        <local:ExitButton x:Name="MyExitButton" HorizontalAlignment="Left" Height="36" Margin="356,336,0,0" Grid.Row="3" VerticalAlignment="Top" Width="70" Grid.Column="1"/>
+        <local:PlainLocation x:Name="MyLocation" HorizontalAlignment="Left" Height="29" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="103" Grid.RowSpan="2"/>
 
 
 

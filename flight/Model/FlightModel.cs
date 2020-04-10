@@ -85,10 +85,19 @@ namespace flight.Model
 
         public void disconnect()
         {
-            m.WaitOne();
-            tcpTimeClient.disconnect();
-            connected = false;
-            m.ReleaseMutex();
+            try
+            {
+                m.WaitOne();
+                tcpTimeClient.disconnect();
+                connected = false;
+                stopGet = true;
+                Error = "The server is disconnected";
+                m.ReleaseMutex();
+            }
+            catch (Exception e)
+            {
+                throw new Exception();
+            }
         }
         public void startSet()
         {

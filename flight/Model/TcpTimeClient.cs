@@ -33,7 +33,7 @@ namespace flight.Model
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                
                 throw new Exception();
             }
         }
@@ -47,7 +47,8 @@ namespace flight.Model
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                
+                throw new Exception();
 
             }
         }
