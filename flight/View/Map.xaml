@@ -14,7 +14,7 @@
 
 
         <m:Map x:Name="worldMap"  CredentialsProvider  =" t2VNjFPyqOf3gjgdytCi~76asZLDA9yuNF-BVNtc2yg~AutkYZM81waeTVYR4r9IZazm4907T2WbLo1sTtOWHxqmmXr6kVJHmf1xxiIVPsoi" Canvas.Top="10" Canvas.Left="10"
-               ZoomLevel="12" Center="32.298705, 34.874000">
+               ZoomLevel="8" Center="32.298705, 34.874000">
 
             <Canvas
                 
