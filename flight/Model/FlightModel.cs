@@ -32,13 +32,15 @@ namespace flight.Model
         private double latitudeDeg;
         private double longitudeDeg;
         private Location location;
-        private string error;
+        private Queue<string> error;
         private Thread thread;
 
         private bool connected;
         private readonly Mutex m = new Mutex();
         private readonly Mutex m1 = new Mutex();
-        
+        private readonly Mutex m2 = new Mutex();
+
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -52,6 +54,7 @@ namespace flight.Model
             initializeAdressAdressDashboardr();
             sendToSim = new Queue<string>();
             connected = false;
+            error = new Queue<string>(); ;
 
         }
         private void NotifyPropretyChanged(string propName)
@@ -91,7 +94,7 @@ namespace flight.Model
                 tcpTimeClient.disconnect();
                 connected = false;
                 stopGet = true;
-                Error = "The server is disconnected";
+                stopSet = true;
                 m.ReleaseMutex();
             }
             catch (Exception e)
@@ -111,7 +114,14 @@ namespace flight.Model
                         while (sendToSim.Count() > 0)
                         {
                             m1.WaitOne();
-                            tcpTimeClient.write(sendToSim.Peek());
+                            try
+                            {
+                                tcpTimeClient.write(sendToSim.Peek());
+                            }
+                            catch
+                            {
+                                Error = "Timeout for writing operation";
+                            }
                             sendToSim.Dequeue();
                             tcpTimeClient.read();
                             m1.ReleaseMutex();
@@ -154,14 +164,17 @@ namespace flight.Model
                 {
                    
                     m1.WaitOne();
-                    //telnetClient.write("EFRAT\n");
-                    tcpTimeClient.write(adressDashboard[0]);
                     try
                     {
-                        ////tcpTimeClient.read();
-                        //telnetClient.read();
+                        tcpTimeClient.write(adressDashboard[0]);
+                    } 
+                    catch (TimeoutException)
+                    {
+                        Error = "Timeout for writing operation";
+                    }
+                    try
+                    {
                         IndicatedHeading = Double.Parse(tcpTimeClient.read());
-                        //IndicatedHeading = Double.Parse("10");
                     }
                     catch (TimeoutException te)
                     {
@@ -176,7 +189,14 @@ namespace flight.Model
 
 
                     m1.WaitOne();
-                    tcpTimeClient.write(adressDashboard[1]);
+                    try
+                    {
+                        tcpTimeClient.write(adressDashboard[1]);
+                    }
+                    catch (TimeoutException)
+                    {
+                        Error = "Timeout for writing operation";
+                    }
                     try
                     {
                         //telnetClient.read();
@@ -198,7 +218,14 @@ namespace flight.Model
 
 
                     m1.WaitOne();
-                    tcpTimeClient.write(adressDashboard[2]);
+                    try
+                    {
+                        tcpTimeClient.write(adressDashboard[2]);
+                    }
+                    catch (TimeoutException)
+                    {
+                        Error = "Timeout for writing operation";
+                    }
                     try
                     {
                         GpsGround = Double.Parse(tcpTimeClient.read());
@@ -215,7 +242,14 @@ namespace flight.Model
                     m1.ReleaseMutex();
 
                     m1.WaitOne();
-                    tcpTimeClient.write(adressDashboard[3]);
+                    try
+                    {
+                        tcpTimeClient.write(adressDashboard[3]);
+                    }
+                    catch (TimeoutException)
+                    {
+                        Error = "Timeout for writing operation";
+                    }
                     try
                     {
                         Airspeed = Double.Parse(tcpTimeClient.read());
@@ -232,7 +266,14 @@ namespace flight.Model
                     m1.ReleaseMutex();
 
                     m1.WaitOne();
-                    tcpTimeClient.write(adressDashboard[4]);
+                    try
+                    {
+                        tcpTimeClient.write(adressDashboard[4]);
+                    }
+                    catch (TimeoutException)
+                    {
+                        Error = "Timeout for writing operation";
+                    }
                     try
                     {
                         GpsAltitude = Double.Parse(tcpTimeClient.read());
@@ -251,7 +292,14 @@ namespace flight.Model
                     m1.ReleaseMutex();
 
                     m1.WaitOne();
-                    tcpTimeClient.write(adressDashboard[5]);
+                    try
+                    {
+                        tcpTimeClient.write(adressDashboard[5]);
+                    }
+                    catch (TimeoutException)
+                    {
+                        Error = "Timeout for writing operation";
+                    }
                     try
                     {
                         Pitch = Double.Parse(tcpTimeClient.read());
@@ -268,7 +316,14 @@ namespace flight.Model
                     m1.ReleaseMutex();
 
                     m1.WaitOne();
-                    tcpTimeClient.write(adressDashboard[6]);
+                    try
+                    {
+                        tcpTimeClient.write(adressDashboard[6]);
+                    }
+                    catch (TimeoutException)
+                    {
+                        Error = "Timeout for writing operation";
+                    }
                     try
                     {
                         PitchDeg = Double.Parse(tcpTimeClient.read());
@@ -285,7 +340,14 @@ namespace flight.Model
                     m1.ReleaseMutex();
 
                     m1.WaitOne();
-                    tcpTimeClient.write(adressDashboard[7]);
+                    try
+                    {
+                        tcpTimeClient.write(adressDashboard[7]);
+                    }
+                    catch (TimeoutException)
+                    {
+                        Error = "Timeout for writing operation";
+                    }
                     try
                     {
                         Altimeter = Double.Parse(tcpTimeClient.read());
@@ -303,7 +365,14 @@ namespace flight.Model
                     m1.ReleaseMutex();
 
                     m1.WaitOne();
-                    tcpTimeClient.write(adressDashboard[8]);
+                    try
+                    {
+                        tcpTimeClient.write(adressDashboard[8]);
+                    }
+                    catch (TimeoutException)
+                    {
+                        Error = "Timeout for writing operation";
+                    }
                     try
                     {
                         LatitudeDeg = Double.Parse(tcpTimeClient.read());
@@ -322,7 +391,14 @@ namespace flight.Model
                     m1.ReleaseMutex();
 
                     m1.WaitOne();
-                    tcpTimeClient.write(adressDashboard[9]);
+                    try
+                    {
+                        tcpTimeClient.write(adressDashboard[9]);
+                    }
+                    catch (TimeoutException)
+                    {
+                        Error = "Timeout for writing operation";
+                    }
                     try
                     {
                         LongitudeDeg = Double.Parse(tcpTimeClient.read());
@@ -344,6 +420,25 @@ namespace flight.Model
             stopGet = false;
             //Console.WriteLine("GET THREAD STOP");
         }
+
+        public void startErrors()
+        {
+            new Thread(delegate ()
+            {
+                while (!stopGet)
+                {
+                    if (error.Count != 0)
+                    {
+                        m2.WaitOne();
+                        NotifyPropretyChanged("Error");
+                        m2.ReleaseMutex();
+                        Thread.Sleep(250);
+                    }
+                }
+            }).Start();
+            
+        }
+
         private void initalizeJoyAdress()
         {
             joystickAdress = new List<string>
@@ -424,13 +519,19 @@ namespace flight.Model
         {
             get
             {
-                return error;
+                if (error.Count != 0)
+                {
+                    string firstError = error.Peek();
+                    error.Dequeue();
+                    return firstError;
+                } else
+                {
+                    return "";
+                }
             }
             set
             {
-                error = DateTime.Now.ToString("h:mm:ss") + " " + value;
-                NotifyPropretyChanged("Error");
-                System.Threading.Thread.Sleep(1000);
+                error.Enqueue(DateTime.Now.ToString("h:mm:ss") + " " + value);
 
             }
         }

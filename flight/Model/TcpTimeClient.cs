@@ -64,10 +64,9 @@ namespace flight.Model
                     massage += (Convert.ToChar(bb[i]));
                 Console.WriteLine("read " + massage);
             }
-            //
             catch (Exception e)
             {
-                throw e;
+                throw new TimeoutException();
             }
             
             return massage;
@@ -86,7 +85,7 @@ namespace flight.Model
             }
             catch (Exception e)
             {
-                Console.WriteLine("fail in write to Simulator" + e.ToString());
+                throw new TimeoutException();
             }
         }
     }

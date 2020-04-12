@@ -30,6 +30,7 @@ namespace flight.ViewModel
             {
                 flightModel.Connect(ip, port);
                 flightModel.startGet();
+                flightModel.startErrors();
             } catch (Exception e)
             {
                 flightModel.Error = "failed to connect to server";
