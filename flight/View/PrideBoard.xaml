@@ -20,19 +20,31 @@
         </Grid.RowDefinitions>
 
 
-        <local:Joystick x:Name="joystick" Grid.RowSpan="1" Grid.Column="2" Grid.ColumnSpan ="2" 
+        <local:Joystick x:Name="joystick" Grid.RowSpan="1" Grid.Column="1" Grid.ColumnSpan ="2" 
                             Rudder="{Binding VM_Rudder, Mode=OneWayToSource}"
-                            Elevator="{Binding VM_Elevator, Mode=OneWayToSource}" RenderTransformOrigin="0.5,0.5">
+                            Elevator="{Binding VM_Elevator, Mode=OneWayToSource}" RenderTransformOrigin="0.5,0.5" Margin="26,0,29,0">
             <local:Joystick.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform ScaleX="0.8" ScaleY="0.8"/>
                 </TransformGroup>
             </local:Joystick.RenderTransform>
         </local:Joystick>
+        <Label x:Name="RubberTag" HorizontalContentAlignment="Center" Content="Rubber:" Margin="238,9,50,267" Grid.Column="2" RenderTransformOrigin="0.5,0.5"/>
+
+
+        <Label x:Name="RubberValue" Content="{Binding Path=VM_Rudder, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" HorizontalContentAlignment="Center" Background="White" Grid.Column="2" Margin="296,9,5,268"/>
+
+
+        <Label x:Name="ElevatorTag" HorizontalContentAlignment="Center" Content="Elevator:" Margin="239,36,49,240" Grid.Column="2" RenderTransformOrigin="0.5,0.5" />
+
+        <Label x:Name="ElevatorValue" Content="{Binding Path=VM_Elevator, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" HorizontalContentAlignment="Center" Background="White" Grid.Column="2" Margin="296,36,5,240"/>
+
+
+
         <Slider x:Name="Aileron" Value="{Binding VM_Aileron ,StringFormat=0.0#}" RenderTransformOrigin="0.5,0.5"
                 TickFrequency="0.1" TickPlacement="TopLeft" ValueChanged="Slider_ValueChanged"
                 Maximum="1" Minimum="-1" HorizontalAlignment="Left" Width="250" Height="200"
-                VerticalAlignment="Top" Grid.ColumnSpan="3" Margin="-94,43,0,0">
+                VerticalAlignment="Top" Grid.ColumnSpan="3" Margin="-100,43,0,0">
             <Slider.LayoutTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -42,11 +54,9 @@
                 </TransformGroup>
             </Slider.LayoutTransform>
         </Slider>
-        <TextBox x:Name="AileronValue" Text="{Binding ElementName=Aileron, Path=Value ,UpdateSourceTrigger=PropertyChanged ,StringFormat=0.0#}" HorizontalAlignment="Left" Margin="45,4,0,0" VerticalAlignment="Top" Foreground="#FFF6F6F9" FontSize="17"  Width="76" Cursor="Pen" IsEnabled="False" RenderTransformOrigin="0.5,0.5" Height="37" Grid.Row="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.ColumnSpan="3" FontFamily="Arial Black" BorderBrush="{x:Null}" Background="{x:Null}">
+        <TextBox x:Name="AileronValue" Text="{Binding ElementName=Aileron, Path=Value ,UpdateSourceTrigger=PropertyChanged ,StringFormat=0.0#}" HorizontalAlignment="Left" Margin="45,4,0,0" VerticalAlignment="Top" Foreground="#FFF6F6F9" FontSize="17"  Width="76" Cursor="Pen" IsEnabled="False" RenderTransformOrigin="0.5,0.5" Height="37" Grid.Row="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Arial Black" BorderBrush="{x:Null}" Background="{x:Null}" Grid.ColumnSpan="3"/>
 
-        </TextBox>
-
-        <Label  Content="Aileron" HorizontalAlignment="Left" Margin="15,155,0,0" VerticalAlignment="Top" Foreground="#FFF4F4FB" FontSize="20"  Width="90" Cursor="None" IsEnabled="False" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="3" Height="38" FontFamily="Arial Black" >
+        <Label  Content="Aileron" HorizontalAlignment="Left" Margin="-17,155,0,0" VerticalAlignment="Top" Foreground="#FFF4F4FB" FontSize="20"  Width="90" Cursor="None" IsEnabled="False" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="2" Height="38" FontFamily="Arial Black" >
             <Label.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -62,12 +72,12 @@
             Grid.Row="1" Grid.Column="2" RenderTransformOrigin="0.5,0.5"
                 TickFrequency="0.1" TickPlacement="TopLeft" ValueChanged="Slider_ValueChanged"
                 Maximum="1" Minimum="0" HorizontalAlignment="Left" Width="250" Height="200"
-                VerticalAlignment="Top" Margin="35,10,0,0" Grid.RowSpan="2"/>
+                VerticalAlignment="Top" Margin="26,14,0,0" Grid.RowSpan="2"/>
 
-        <TextBox x:Name="ThrottleValue" Text="{Binding ElementName=Throttle, Path=Value ,UpdateSourceTrigger=PropertyChanged ,StringFormat=0.0#}" HorizontalAlignment="Left" Margin="285,5,0,0" VerticalAlignment="Top" Foreground="White" FontSize="17"  Width="53" Cursor="Pen" IsEnabled="False" RenderTransformOrigin="0.5,0.5" Grid.Column="2" Grid.RowSpan="2" Height="37" FontFamily="Arial Black" Background="{x:Null}" Grid.Row="1" BorderBrush="{x:Null}" >
+        <TextBox x:Name="ThrottleValue" Text="{Binding ElementName=Throttle, Path=Value ,UpdateSourceTrigger=PropertyChanged ,StringFormat=0.0#}" HorizontalAlignment="Left" Margin="285,20,0,0" VerticalAlignment="Top" Foreground="White" FontSize="17"  Width="53" Cursor="Pen" IsEnabled="False" RenderTransformOrigin="0.5,0.5" Grid.Column="2" Grid.RowSpan="2" Height="37" FontFamily="Arial Black" Background="{x:Null}" Grid.Row="1" BorderBrush="{x:Null}" >
 
         </TextBox>
-        <Label  Content="Throttle" HorizontalAlignment="Left" Margin="114,32,0,0" VerticalAlignment="Top" FontSize="20"  Width="112" Cursor="None" IsEnabled="False" RenderTransformOrigin="0.5,0.5" Grid.Column="2"  Foreground="White" Grid.Row="1" Height="34" Grid.RowSpan="2" FontFamily="Arial Black"  >
+        <Label  Content="Throttle" HorizontalAlignment="Left" Margin="100,35,0,0" VerticalAlignment="Top" FontSize="20"  Width="112" Cursor="None" IsEnabled="False" RenderTransformOrigin="0.5,0.5" Grid.Column="2"  Foreground="White" Grid.Row="1" Height="34" Grid.RowSpan="2" FontFamily="Arial Black"  >
             <Label.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -84,8 +94,6 @@
         <!--
         
         
-
-
         <Slider x:Name="Throttle" Value="{Binding VM_Throttle ,StringFormat='0,0.'}"
                 TickFrequency="0.1" TickPlacement="TopLeft" ValueChanged="Slider_ValueChanged"
                 Maximum="1" Minimum="0" HorizontalAlignment="Center" 
@@ -98,7 +106,6 @@
                 </TransformGroup>
             </Slider.RenderTransform>
         </Slider>
-
         <Label x:Name="ThrottleValue" Content="{Binding ElementName=Throttle, Path=Value ,UpdateSourceTrigger=PropertyChanged ,StringFormat='0,0.'}" HorizontalAlignment="Left" Margin="114,226,0,0" VerticalAlignment="Top" Foreground="Blue" FontSize="20"  Width="138" Cursor="Pen" IsEnabled="False" RenderTransformOrigin="0.5,0.5" Grid.Column="2" Grid.RowSpan="2" Height="37" >
             <Label.RenderTransform>
                 <TransformGroup>
@@ -117,8 +124,6 @@
                 </TransformGroup>
             </Label.RenderTransform>
         </Label>
-
-
 -->
 
     </Grid>

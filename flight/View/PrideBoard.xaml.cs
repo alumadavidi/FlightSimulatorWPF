@@ -14,7 +14,7 @@ namespace flight
         public PrideBoard()
         {
             InitializeComponent();
-           
+
         }
         public void SetDataContext(IFlightModel flightModel)
         {
@@ -25,5 +25,15 @@ namespace flight
         {
 
         }
+
+        //private void RubberTag_TextChanged(object sender, TextChangedEventArgs e)
+        //{
+
+        //}
+
+        //private void ElevatorVal_TextChanged(object sender, TextChangedEventArgs e)
+        //{
+
+        //}
     }
 }
