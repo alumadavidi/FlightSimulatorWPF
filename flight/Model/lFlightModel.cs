@@ -27,7 +27,7 @@ namespace flight.Model
         void startErrors();
 
         void updateControlParameter(string command);
-        void moveJoy(double ru, double el);
-        void moveSlid(double th, double al);
+        //void moveJoy(double ru, double el);
+        //void moveSlid(double th, double al);
     }
 }

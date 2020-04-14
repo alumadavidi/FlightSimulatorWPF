@@ -92,10 +92,10 @@ namespace flight.Model
             try
             {
                 m.WaitOne();
-                tcpTimeClient.disconnect();
                 connected = false;
                 stopGet = true;
                 stopSet = true;
+                tcpTimeClient.disconnect();
                 m.ReleaseMutex();
                 Error = "disconnect from server";
             }
@@ -111,9 +111,9 @@ namespace flight.Model
             {
                 while (!stopSet)
                 {
-                    if (connected)
+                    while (sendToSim.Count() > 0)
                     {
-                        while (sendToSim.Count() > 0)
+                        if (connected)
                         {
                             m1.WaitOne();
                             try
@@ -124,9 +124,6 @@ namespace flight.Model
                             {
                                 Error = "Timeout for writing operation";
                             }
-                            m3.WaitOne();
-                            sendToSim.Dequeue();
-                            m3.ReleaseMutex();
                             try
                             {
                                 tcpTimeClient.read();
@@ -136,6 +133,12 @@ namespace flight.Model
                                 Error = "Timeout";
                             }
                             m1.ReleaseMutex();
+                            m3.WaitOne();
+                            sendToSim.Dequeue();
+                            m3.ReleaseMutex();
+                        }
+                        else { 
+                            break; 
                         }
                     }
                 }
@@ -145,29 +148,34 @@ namespace flight.Model
             
         }
 
-        public void insertCommand(string command)
-        {
-            m3.WaitOne();
-            sendToSim.Enqueue(command);
-            m3.ReleaseMutex();
-        }
-        public void moveJoy(double ru, double el)
-        {
-            insertCommand(joystickAdress[0] + ru.ToString() + "\n");
-            insertCommand(joystickAdress[1] + el.ToString() + "\n");
-        }
+        //public void insertCommand(string command)
+        //{
+        //    m3.WaitOne();
+        //    sendToSim.Enqueue(command);
+        //    m3.ReleaseMutex();
+        //}
+        //public void moveJoy(double ru, double el)
+        //{
+        //    insertCommand(joystickAdress[0] + ru.ToString() + "\n");
+        //    insertCommand(joystickAdress[1] + el.ToString() + "\n");
+        //}
         public void updateControlParameter(string command)
         {
-            if (connected) { insertCommand(command); }
+            if (connected)
+            {
+                m3.WaitOne();
+                sendToSim.Enqueue(command);
+                m3.ReleaseMutex();
+            }
         }
 
 
 
-        public void moveSlid(double th, double al)
-        {
-            insertCommand(sliderAdress[0] + th.ToString() + "\n");
-            insertCommand(sliderAdress[1] + al.ToString() + "\n");
-        }
+        //public void moveSlid(double th, double al)
+        //{
+        //    insertCommand(sliderAdress[0] + th.ToString() + "\n");
+        //    insertCommand(sliderAdress[1] + al.ToString() + "\n");
+        //}
         public void startGet()
         {
             //sendToSimulator();
@@ -372,8 +380,6 @@ namespace flight.Model
                     catch (Exception e)
                     {
                         Error = "Invalid Altimeter data from server";
-                        
-
                     }
                     m1.ReleaseMutex();
 
@@ -398,8 +404,6 @@ namespace flight.Model
                     catch (Exception e)
                     {
                         Error = "Invalid LatitudeDeg data from server";
-                        
-
                     }
                     m1.ReleaseMutex();
 
@@ -423,14 +427,12 @@ namespace flight.Model
                     catch (Exception e)
                     {
                         Error = "Invalid LongitudeDeg data from server";
-                        
-
                     }
                     m1.ReleaseMutex();
                     Thread.Sleep(250);
                 }
             }).Start();
-            stopGet = false;
+            //stopGet = false;
             //Console.WriteLine("GET THREAD STOP");
         }
 
