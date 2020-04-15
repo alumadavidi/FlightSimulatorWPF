@@ -11,9 +11,9 @@
 
 
 
-        <Label x:Name="LabelY" Content="{Binding Path=VM_LongitudeDeg, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" HorizontalContentAlignment="Center" FontSize="13" FontFamily="Arial Black"  Background="Red" Margin="50,0,0,0"/>
+        <Label x:Name="LabelY" Content="{Binding Path=VM_LongitudeDeg, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" HorizontalContentAlignment="Center" FontSize="13" FontFamily="Arial Black"  Background="#FF00F3FF" Margin="50,0,0,0"/>
 
-        <Label x:Name="LabelX" Content="{Binding Path=VM_LatitudeDeg, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" HorizontalContentAlignment="Center" FontSize="13" FontFamily="Arial Black"  Background="Green" Margin="0,0,50,0"/>
+        <Label x:Name="LabelX" Content="{Binding Path=VM_LatitudeDeg, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" HorizontalContentAlignment="Center" FontSize="13" FontFamily="Arial Black"  Background="#FF00F3FF" Margin="0,0,50,0"/>
 
 
 

@@ -30,7 +30,7 @@ namespace flight
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            _flightViewModel.disconnect();
+            _flightViewModel.Disconnect();
 
         }
     }

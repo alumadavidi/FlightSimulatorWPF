@@ -18,12 +18,7 @@ namespace flight.ViewModel
             {
                 NotifyPropretyChanged("VM_" + e.PropertyName);
             };
-            //flightModel.connect("192.168.202.129", 5403);
-            //rudderElevator.X = 0;
-            //rudderElevator.Y = 0;
-            //throttle = 0;
-            //alieron = 0;
-            //flightModel.startGet();
+           
         }
 
         private void NotifyPropretyChanged(string propName)

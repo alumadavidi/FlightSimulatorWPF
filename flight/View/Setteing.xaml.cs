@@ -32,7 +32,7 @@ namespace flight
             DataContext = _flightViewModel;
         }
 
-        private bool validIp(string ip)
+        private bool ValidIp(string ip)
         {
             bool match =
                 Regex.IsMatch(ip, "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
@@ -48,7 +48,7 @@ namespace flight
         {
            
         }
-        private bool validPort(string port)
+        private bool ValidPort(string port)
         {
             bool valid = false;
             int portNumber;
@@ -68,11 +68,11 @@ namespace flight
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (validPort(PortValue.Text) && validIp(IpValue.Text))
+            if (ValidPort(PortValue.Text) && ValidIp(IpValue.Text))
             {
                 buttonClick.Visibility = Visibility.Hidden;
                 ValidOutput.Visibility = Visibility.Hidden;
-                _flightViewModel.connect(_ip, _port);
+                _flightViewModel.Connect(_ip, _port);
 
             }
             else

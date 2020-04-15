@@ -7,8 +7,8 @@ namespace flight.Model
     public interface ITcpTimeClient
     {
         void Connect(string ip, int port);
-        void write(string command);
-        string read(); // blocking call
-        void disconnect();
+        void Write(string command);
+        string Read(); // blocking call
+        void Disconnect();
     }
 }

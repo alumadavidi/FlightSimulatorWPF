@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using System.Net.Sockets;
 using System.Text;
 
@@ -20,7 +18,7 @@ namespace flight.Model
         {
             get
             {
-                return client ;
+                return client;
 
             }
         }
@@ -31,13 +29,13 @@ namespace flight.Model
             {
                 client.Connect(ip, port);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                
+
                 throw new Exception();
             }
         }
-        public void disconnect()
+        public void Disconnect()
         {
             // Release the socket.    
             try
@@ -45,15 +43,15 @@ namespace flight.Model
                 client.GetStream().Close();
                 client.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                
+
                 throw new Exception();
 
             }
         }
 
-        public string read()
+        public string Read()
         {
             string massage = "";
             try
@@ -65,18 +63,18 @@ namespace flight.Model
                 Console.WriteLine("read " + massage);
             }
 
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new TimeoutException();
             }
-            
+
             return massage;
 
         }
 
 
 
-        public void write(string command)
+        public void Write(string command)
         {
             try
             {
@@ -84,7 +82,7 @@ namespace flight.Model
                 byte[] ba = asen.GetBytes(command);
                 client.GetStream().Write(ba, 0, ba.Length);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new TimeoutException();
             }

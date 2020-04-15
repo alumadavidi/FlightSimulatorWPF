@@ -12,12 +12,10 @@ namespace flight.Model
 {
     public class IFlightModel : lFlightModel
     {
-        private ITcpTimeClient  tcpTimeClient;
+        private ITcpTimeClient tcpTimeClient;
         private volatile bool stopGet;
         private volatile bool stopSet;
         private Queue<string> sendToSim;
-        private List<string> joystickAdress;
-        private List<string> sliderAdress;
         private List<string> adressDashboard;
         //for dashboard
         private double indicatedHeading;
@@ -33,8 +31,6 @@ namespace flight.Model
         private double longitudeDeg;
         private Location location;
         private Queue<string> error;
-        private Thread thread;
-
         private bool connected;
         private readonly Mutex m = new Mutex();
         private readonly Mutex m1 = new Mutex();
@@ -50,9 +46,7 @@ namespace flight.Model
             tcpTimeClient = tc;
             stopGet = false;
             stopSet = false;
-            initalizeJoyAdress();
-            initalizeSlidAdress();
-            initializeAdressAdressDashboardr();
+            InitializeAdressAdressDashboardr();
             sendToSim = new Queue<string>();
             connected = false;
             error = new Queue<string>(); ;
@@ -65,29 +59,29 @@ namespace flight.Model
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
         }
-       
+
         public void Connect(string ip, int port)
         {
             try
             {
                 m.WaitOne();
-                //Console.WriteLine("enter to connect");
                 if (!connected)
                 {
                     tcpTimeClient.Connect(ip, port);
                     connected = true;
+                    StartGet();
+                    StartSet();
                 }
                 m.ReleaseMutex();
-                //Console.WriteLine("exit ");
             }
-           catch (Exception e)
+            catch (Exception)
             {
-                throw new Exception();
+                Error = "failed to connect to server";
             }
-            
+
         }
 
-        public void disconnect()
+        public void Disconnect()
         {
             try
             {
@@ -95,71 +89,56 @@ namespace flight.Model
                 connected = false;
                 stopGet = true;
                 stopSet = true;
-                tcpTimeClient.disconnect();
+                tcpTimeClient.Disconnect();
                 m.ReleaseMutex();
                 Error = "disconnect from server";
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new Exception();
             }
         }
-        public void startSet()
+        public void StartSet()
         {
-            
+
             new Thread(delegate ()
             {
                 while (!stopSet)
                 {
                     while (sendToSim.Count() > 0)
                     {
-                        if (connected)
-                        {
                             m1.WaitOne();
                             try
                             {
-                                tcpTimeClient.write(sendToSim.Peek());
+                                tcpTimeClient.Write(sendToSim.Peek());
+                                while (true)
+                                {
+                                    try
+                                    {
+                                        tcpTimeClient.Read();
+                                        break;
+                                    }
+                                    catch (TimeoutException)
+                                    {
+                                        Error = "Timeout";
+                                    }
+                                }
                             }
                             catch
                             {
                                 Error = "Timeout for writing operation";
                             }
-                            try
-                            {
-                                tcpTimeClient.read();
-                            }
-                            catch (TimeoutException te)
-                            {
-                                Error = "Timeout";
-                            }
                             m1.ReleaseMutex();
                             m3.WaitOne();
                             sendToSim.Dequeue();
                             m3.ReleaseMutex();
-                        }
-                        else { 
-                            break; 
-                        }
                     }
                 }
             }).Start();
             stopSet = false;
-            //Console.WriteLine("Set THREAD STOP");
-            
         }
 
-        //public void insertCommand(string command)
-        //{
-        //    m3.WaitOne();
-        //    sendToSim.Enqueue(command);
-        //    m3.ReleaseMutex();
-        //}
-        //public void moveJoy(double ru, double el)
-        //{
-        //    insertCommand(joystickAdress[0] + ru.ToString() + "\n");
-        //    insertCommand(joystickAdress[1] + el.ToString() + "\n");
-        //}
-        public void updateControlParameter(string command)
+        public void UpdateControlParameter(string command)
         {
             if (connected)
             {
@@ -170,273 +149,314 @@ namespace flight.Model
         }
 
 
-
-        //public void moveSlid(double th, double al)
-        //{
-        //    insertCommand(sliderAdress[0] + th.ToString() + "\n");
-        //    insertCommand(sliderAdress[1] + al.ToString() + "\n");
-        //}
-        public void startGet()
+        public void StartGet()
         {
             //sendToSimulator();
             new Thread(delegate ()
             {
                 while (!stopGet) // 4 loops in second
                 {
-                   
+
                     m1.WaitOne();
                     try
                     {
-                        tcpTimeClient.write(adressDashboard[0]);
-                    } 
+                        tcpTimeClient.Write(adressDashboard[0]);
+                        while (true)
+                        {
+                            try
+                            {
+                                //IndicatedHeading = Double.Parse("e");
+                                IndicatedHeading = Double.Parse(tcpTimeClient.Read());
+                                break;
+
+                            }
+                            catch (TimeoutException)
+                            {
+                                Error = "Timeout";
+                            }
+                            catch (Exception)
+                            {
+                                Error = "Invalid IndicatedHeading data from server";
+                                break;
+
+                            }
+                        }
+                    }
                     catch (TimeoutException)
                     {
                         Error = "Timeout for writing operation";
                     }
-                    try
-                    {
-                        IndicatedHeading = Double.Parse(tcpTimeClient.read());
-                        //IndicatedHeading = Double.Parse("e");
-                    }
-                    catch (TimeoutException te)
-                    {
-                        Error = "Timeout";
-                    }
-                    catch (Exception e)
-                    {
-                        Error = "Invalid IndicatedHeading data from server";
-                       
-                    }
+                    
                     m1.ReleaseMutex();
 
 
                     m1.WaitOne();
                     try
                     {
-                        tcpTimeClient.write(adressDashboard[1]);
+                        tcpTimeClient.Write(adressDashboard[1]);
+                        while (true)
+                        {
+                            try
+                            {
+                                //tcpTimeClient.read();
+                                GpsVertical = Double.Parse(tcpTimeClient.Read());
+                                break;
+
+                                //GpsVertical = Double.Parse("e");
+                            }
+                            catch (TimeoutException)
+                            {
+                                Error = "Timeout";
+                            }
+                            catch (Exception)
+                            {
+                                Error = "Invalid GpsVertical data from server";
+                                break;
+
+                            }
+                        }
                     }
                     catch (TimeoutException)
                     {
                         Error = "Timeout for writing operation";
                     }
-                    try
-                    {
-                        //tcpTimeClient.read();
-                        GpsVertical = Double.Parse(tcpTimeClient.read());
-
-                        //GpsVertical = Double.Parse("e");
-                    }
-                    catch (TimeoutException te)
-                    {
-                        Error = "Timeout";
-                    }
-                    catch (Exception e)
-                    {
-                        Error = "Invalid GpsVertical data from server";
-                        
-                    }
+                    
                     m1.ReleaseMutex();
 
 
                     m1.WaitOne();
                     try
                     {
-                        tcpTimeClient.write(adressDashboard[2]);
+                        tcpTimeClient.Write(adressDashboard[2]);
+                        while (true)
+                        {
+                            try
+                            {
+                                GpsGround = Double.Parse(tcpTimeClient.Read());
+                                break;
+                            }
+                            catch (TimeoutException)
+                            {
+                                Error = "Timeout";
+                            }
+                            catch (Exception)
+                            {
+                                Error = "Invalid GpsGround data from server";
+                                break;
+
+                            }
+                        }
                     }
                     catch (TimeoutException)
                     {
                         Error = "Timeout for writing operation";
-                    }
-                    try
-                    {
-                        GpsGround = Double.Parse(tcpTimeClient.read());
-                    }
-                    catch (TimeoutException te)
-                    {
-                        Error = "Timeout";
-                    }
-                    catch (Exception e)
-                    {
-                        Error = "Invalid GpsGround data from server";
-                        
                     }
                     m1.ReleaseMutex();
 
                     m1.WaitOne();
                     try
                     {
-                        tcpTimeClient.write(adressDashboard[3]);
+                        tcpTimeClient.Write(adressDashboard[3]);
+                        while (true)
+                        {
+                            try
+                            {
+                                Airspeed = Double.Parse(tcpTimeClient.Read());
+                                break;
+                            }
+                            catch (TimeoutException)
+                            {
+                                Error = "Timeout";
+                            }
+                            catch (Exception)
+                            {
+                                Error = "Invalid Airspeed data from server";
+                                break;
+
+                            }
+                        }
                     }
                     catch (TimeoutException)
                     {
                         Error = "Timeout for writing operation";
-                    }
-                    try
-                    {
-                        Airspeed = Double.Parse(tcpTimeClient.read());
-                    }
-                    catch (TimeoutException te)
-                    {
-                        Error = "Timeout";
-                    }
-                    catch (Exception e)
-                    {
-                        Error = "Invalid Airspeed data from server";
-                        
                     }
                     m1.ReleaseMutex();
 
                     m1.WaitOne();
                     try
                     {
-                        tcpTimeClient.write(adressDashboard[4]);
+                        tcpTimeClient.Write(adressDashboard[4]);
+                        while (true)
+                        {
+                            try
+                            {
+                                GpsAltitude = Double.Parse(tcpTimeClient.Read());
+                                break;
+                            }
+
+                            catch (TimeoutException)
+                            {
+                                Error = "Timeout";
+                            }
+                            catch (Exception)
+                            {
+                                Error = "Invalid GpsAltitude data from server";
+                                break;
+                            }
+                        }
                     }
                     catch (TimeoutException)
                     {
                         Error = "Timeout for writing operation";
-                    }
-                    try
-                    {
-                        GpsAltitude = Double.Parse(tcpTimeClient.read());
-                    }
-                   
-                    catch (TimeoutException te)
-                    {
-                        Error = "Timeout";
-                    }
-                    catch (Exception e)
-                    {
-                        Error = "Invalid GpsAltitude data from server";
-                        
-
                     }
                     m1.ReleaseMutex();
 
                     m1.WaitOne();
                     try
                     {
-                        tcpTimeClient.write(adressDashboard[5]);
+                        tcpTimeClient.Write(adressDashboard[5]);
+                        while (true)
+                        {
+                            try
+                            {
+                                Pitch = Double.Parse(tcpTimeClient.Read());
+                                break;
+                            }
+                            catch (TimeoutException)
+                            {
+                                Error = "Timeout";
+                            }
+                            catch (Exception)
+                            {
+                                Error = "Invalid Pitch data from server";
+                                break;
+                            }
+                        }
                     }
                     catch (TimeoutException)
                     {
                         Error = "Timeout for writing operation";
-                    }
-                    try
-                    {
-                        Pitch = Double.Parse(tcpTimeClient.read());
-                    }
-                    catch (TimeoutException te)
-                    {
-                        Error = "Timeout";
-                    }
-                    catch (Exception e)
-                    {
-                        Error = "Invalid Pitch data from server";
-                        
                     }
                     m1.ReleaseMutex();
 
                     m1.WaitOne();
                     try
                     {
-                        tcpTimeClient.write(adressDashboard[6]);
+                        tcpTimeClient.Write(adressDashboard[6]);
+                        while (true)
+                        {
+                            try
+                            {
+                                PitchDeg = Double.Parse(tcpTimeClient.Read());
+                                break;
+                            }
+                            catch (TimeoutException)
+                            {
+                                Error = "Timeout";
+                            }
+                            catch (Exception)
+                            {
+                                Error = "Invalid PitchDeg data from server";
+                                break;
+                            }
+                        }
                     }
                     catch (TimeoutException)
                     {
                         Error = "Timeout for writing operation";
-                    }
-                    try
-                    {
-                        PitchDeg = Double.Parse(tcpTimeClient.read());
-                    }
-                    catch (TimeoutException te)
-                    {
-                        Error = "Timeout";
-                    }
-                    catch (Exception e)
-                    {
-                        Error = "Invalid PitchDeg data from server";
-                        
                     }
                     m1.ReleaseMutex();
 
                     m1.WaitOne();
                     try
                     {
-                        tcpTimeClient.write(adressDashboard[7]);
+                        tcpTimeClient.Write(adressDashboard[7]);
+                        while (true)
+                        {
+                            try
+                            {
+                                Altimeter = Double.Parse(tcpTimeClient.Read());
+                                break;
+                            }
+                            catch (TimeoutException)
+                            {
+                                Error = "Timeout";
+                            }
+                            catch (Exception)
+                            {
+                                Error = "Invalid Altimeter data from server";
+                                break;
+                            }
+                        }
                     }
                     catch (TimeoutException)
                     {
                         Error = "Timeout for writing operation";
-                    }
-                    try
-                    {
-                        Altimeter = Double.Parse(tcpTimeClient.read());
-                    }
-                    catch (TimeoutException te)
-                    {
-                        Error = "Timeout";
-                    }
-                    catch (Exception e)
-                    {
-                        Error = "Invalid Altimeter data from server";
                     }
                     m1.ReleaseMutex();
 
                     m1.WaitOne();
                     try
                     {
-                        tcpTimeClient.write(adressDashboard[8]);
+                        tcpTimeClient.Write(adressDashboard[8]);
+                        while (true)
+                        {
+                            try
+                            {
+                                LatitudeDeg = Double.Parse(tcpTimeClient.Read());
+                                //LatitudeDeg = Double.Parse("100");
+                                break;
+                            }
+                            catch (TimeoutException)
+                            {
+                                Error = "Timeout";
+                            }
+                            catch (Exception)
+                            {
+                                Error = "Invalid LatitudeDeg data from server";
+                                break;
+                            }
+                        }
                     }
                     catch (TimeoutException)
                     {
                         Error = "Timeout for writing operation";
-                    }
-                    try
-                    {
-                        LatitudeDeg = Double.Parse(tcpTimeClient.read());
-                        //LatitudeDeg = Double.Parse("100");
-                    }
-                    catch (TimeoutException te)
-                    {
-                        Error = "Timeout";
-                    }
-                    catch (Exception e)
-                    {
-                        Error = "Invalid LatitudeDeg data from server";
                     }
                     m1.ReleaseMutex();
 
                     m1.WaitOne();
                     try
                     {
-                        tcpTimeClient.write(adressDashboard[9]);
+                        tcpTimeClient.Write(adressDashboard[9]);
+                        while (true)
+                        {
+                            try
+                            {
+                                LongitudeDeg = Double.Parse(tcpTimeClient.Read());
+                                break;
+                            }
+                            catch (TimeoutException)
+                            {
+                                Error = "Timeout";
+                            }
+                            catch (Exception)
+                            {
+                                Error = "Invalid LongitudeDeg data from server";
+                                break;
+                            }
+                        }
                     }
                     catch (TimeoutException)
                     {
                         Error = "Timeout for writing operation";
-                    }
-                    try
-                    {
-                        LongitudeDeg = Double.Parse(tcpTimeClient.read());
-                    }
-                    catch (TimeoutException te)
-                    {
-                        Error = "Timeout";
-                    }
-                    catch (Exception e)
-                    {
-                        Error = "Invalid LongitudeDeg data from server";
                     }
                     m1.ReleaseMutex();
                     Thread.Sleep(250);
                 }
             }).Start();
-            //stopGet = false;
-            //Console.WriteLine("GET THREAD STOP");
         }
 
-        public void startErrors()
+        public void StartErrors()
         {
             new Thread(delegate ()
             {
@@ -451,27 +471,10 @@ namespace flight.Model
                     }
                 }
             }).Start();
-            
-        }
 
-        private void initalizeJoyAdress()
-        {
-            joystickAdress = new List<string>
-            {
-                  "set /controls/flight/rudder ",
-                 "set /controls/flight/elevator "
-            };
         }
-        private void initalizeSlidAdress()
-        {
-            sliderAdress = new List<string>
-            {
-                "set /controls/engines/current-engine/throttle ",
-                "set /controls/flight/aileron "
-
-            };
-        }
-        private void initializeAdressAdressDashboardr()
+       
+        private void InitializeAdressAdressDashboardr()
         {
             //two last adress are for map
             adressDashboard = new List<string> {
@@ -487,26 +490,27 @@ namespace flight.Model
                 "get /position/longitude-deg\n"
             };
         }
-       
-        private double setDataInCorrectRange(string data, double minValue, double maxValue, string name)
+
+        private double SetDataInCorrectRange(string data, double minValue, double maxValue, string name)
         {
             double num;
             Double.TryParse(data, out num);
-            if(num > maxValue)
+            if (num > maxValue)
             {
                 num = maxValue;
                 Error = name + " is out of range - rand down";
-            } else if(num < minValue)
+            }
+            else if (num < minValue)
             {
                 num = minValue;
                 Error = name + " is out of range - rand up";
             }
             return num;
         }
-        private bool locationValue()
+        private bool LocationValue()
         {
             bool valid = true;
-            if(LatitudeDeg >= 85 || LatitudeDeg <= -85 || LongitudeDeg <=-177 || LongitudeDeg >= 177)
+            if (LatitudeDeg >= 85 || LatitudeDeg <= -85 || LongitudeDeg <= -177 || LongitudeDeg >= 177)
             {
                 valid = false;
                 Error = "The plane try to fly out of map";
@@ -514,7 +518,7 @@ namespace flight.Model
             return valid;
         }
 
-               
+
         public Location LocationF
         {
             get
@@ -523,7 +527,7 @@ namespace flight.Model
             }
             set
             {
-                if (locationValue())
+                if (LocationValue())
                 {
                     location = value;
                     NotifyPropretyChanged("LocationF");
@@ -541,7 +545,8 @@ namespace flight.Model
                     error.Dequeue();
                     m2.ReleaseMutex();
                     return firstError;
-                } else
+                }
+                else
                 {
                     return "";
                 }
@@ -563,7 +568,7 @@ namespace flight.Model
             }
             set
             {
-                indicatedHeading = Math.Round(setDataInCorrectRange(value.ToString(), 5, 7, "IndicatedHeading"), 2);
+                indicatedHeading = Math.Round(SetDataInCorrectRange(value.ToString(), 5, 7, "IndicatedHeading"), 2);
                 NotifyPropretyChanged("IndicatedHeading");
             }
         }
@@ -575,7 +580,7 @@ namespace flight.Model
             }
             set
             {
-                gpsVertical = Math.Round(setDataInCorrectRange(value.ToString(), 7, 9, "GpsVertical"), 2);
+                gpsVertical = Math.Round(SetDataInCorrectRange(value.ToString(), 7, 9, "GpsVertical"), 2);
                 NotifyPropretyChanged("GpsVertical");
             }
         }
@@ -587,7 +592,7 @@ namespace flight.Model
             }
             set
             {
-                gpsGround = Math.Round(setDataInCorrectRange(value.ToString(), 6, 8, "GpsGround"), 2);
+                gpsGround = Math.Round(SetDataInCorrectRange(value.ToString(), 6, 8, "GpsGround"), 2);
                 NotifyPropretyChanged("GpsGround");
             }
         }
@@ -599,7 +604,7 @@ namespace flight.Model
             }
             set
             {
-                airspeed = Math.Round(setDataInCorrectRange(value.ToString(), 0, 2, "Airspeed"), 2);
+                airspeed = Math.Round(SetDataInCorrectRange(value.ToString(), 0, 2, "Airspeed"), 2);
                 NotifyPropretyChanged("Airspeed");
             }
         }
@@ -611,7 +616,7 @@ namespace flight.Model
             }
             set
             {
-                gpsAltitude = Math.Round(setDataInCorrectRange(value.ToString(), 1, 3, "GpsAltitude"), 2);
+                gpsAltitude = Math.Round(SetDataInCorrectRange(value.ToString(), 1, 3, "GpsAltitude"), 2);
                 NotifyPropretyChanged("GpsAltitude");
             }
         }
@@ -623,7 +628,7 @@ namespace flight.Model
             }
             set
             {
-                pitch = Math.Round(setDataInCorrectRange(value.ToString(), 2, 4, "Pitch"), 2);
+                pitch = Math.Round(SetDataInCorrectRange(value.ToString(), 2, 4, "Pitch"), 2);
                 NotifyPropretyChanged("Pitch");
             }
         }
@@ -635,7 +640,7 @@ namespace flight.Model
             }
             set
             {
-                pitchDeg = Math.Round(setDataInCorrectRange(value.ToString(), 3, 5, "PitchDeg"), 2);
+                pitchDeg = Math.Round(SetDataInCorrectRange(value.ToString(), 3, 5, "PitchDeg"), 2);
                 NotifyPropretyChanged("PitchDeg");
             }
         }
@@ -647,7 +652,7 @@ namespace flight.Model
             }
             set
             {
-                altimeter = Math.Round(setDataInCorrectRange(value.ToString(), 4, 6, "Altimeter"), 2);
+                altimeter = Math.Round(SetDataInCorrectRange(value.ToString(), 4, 6, "Altimeter"), 2);
                 NotifyPropretyChanged("Altimeter");
             }
         }
@@ -659,13 +664,13 @@ namespace flight.Model
             }
             set
             {
-                if (specificLocationValue(LatitudeDeg, 85, -85, "LatitudeDeg"))
+                if (SpecificLocationValue(LatitudeDeg, 85, -85, "LatitudeDeg"))
                 {
                     latitudeDeg = Math.Round(value, 2);
                     NotifyPropretyChanged("LatitudeDeg");
                     LocationF = new Location(LatitudeDeg, LongitudeDeg);
                 }
-               
+
             }
         }
         public double LongitudeDeg
@@ -676,19 +681,19 @@ namespace flight.Model
             }
             set
             {
-               
-                if (specificLocationValue(LongitudeDeg, 177, -177, "LongitudeDeg"))
+
+                if (SpecificLocationValue(LongitudeDeg, 177, -177, "LongitudeDeg"))
                 {
                     longitudeDeg = Math.Round(value, 2);
                     NotifyPropretyChanged("LongitudeDeg");
                     LocationF = new Location(LatitudeDeg, LongitudeDeg);
                 }
-               
-               
+
+
             }
         }
 
-        private bool specificLocationValue(double num, double max, double min, string valueName)
+        private bool SpecificLocationValue(double num, double max, double min, string valueName)
         {
             bool valid = true;
             if (num >= max || num <= min)

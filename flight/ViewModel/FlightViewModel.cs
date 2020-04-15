@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace flight.ViewModel
 {
-     public class FlightViewModel : INotifyPropertyChanged
+    public class FlightViewModel : INotifyPropertyChanged
     {
 
         private lFlightModel flightModel;
@@ -21,29 +21,23 @@ namespace flight.ViewModel
             flightModel.PropertyChanged += delegate (Object sender, PropertyChangedEventArgs e)
             {
                 NotifyPropretyChanged("VM_" + e.PropertyName);
-                
+
             };
         }
-       public void connect(string ip, int port)
+        public void Connect(string ip, int port)
         {
-            try
-            {
+                flightModel.StartErrors();
                 flightModel.Connect(ip, port);
-                flightModel.startGet();
-                flightModel.startErrors();
-            } catch (Exception e)
-            {
-                flightModel.Error = "failed to connect to server";
-            }
+                //flightModel.startGet();
         }
 
-        internal void disconnect()
+        internal void Disconnect()
         {
             try
             {
-                flightModel.disconnect();
+                flightModel.Disconnect();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 flightModel.Error = "failed to disconnect from server";
             }

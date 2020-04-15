@@ -21,13 +21,11 @@ namespace flight.Model
         Location LocationF { get; set; }
         string Error { get; set; }
         void Connect(string ip, int port);
-        void disconnect();
-        void startGet();
-        void startSet();
-        void startErrors();
+        void Disconnect();
+        void StartGet();
+        void StartSet();
+        void StartErrors();
+        void UpdateControlParameter(string command);
 
-        void updateControlParameter(string command);
-        //void moveJoy(double ru, double el);
-        //void moveSlid(double th, double al);
     }
 }

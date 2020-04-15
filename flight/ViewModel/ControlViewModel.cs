@@ -16,7 +16,6 @@ namespace flight.ViewModel
         public ControlViewModel(lFlightModel iFlight)
         {
             flightModel = iFlight;
-            flightModel.startSet();
         }
 
         public double VM_Rudder
@@ -28,7 +27,7 @@ namespace flight.ViewModel
             set
             {
                 rudder = value;
-                flightModel.updateControlParameter("set /controls/flight/rudder " + rudder + "\n");
+                flightModel.UpdateControlParameter("set /controls/flight/rudder " + rudder + "\n");
             }
         }
         public double VM_Elevator
@@ -40,7 +39,7 @@ namespace flight.ViewModel
             set
             {
                 elevator = value;
-                flightModel.updateControlParameter("set /controls/flight/elevator " + elevator + "\n");
+                flightModel.UpdateControlParameter("set /controls/flight/elevator " + elevator + "\n");
             }
         }
 
@@ -53,7 +52,7 @@ namespace flight.ViewModel
             set
             {
                 throttle = value;
-                flightModel.updateControlParameter("set /controls/engines/current-engine/throttle " 
+                flightModel.UpdateControlParameter("set /controls/engines/current-engine/throttle " 
                     + throttle + "\n");
             }
         }
@@ -66,7 +65,7 @@ namespace flight.ViewModel
             set
             {
                 alieron = value;
-                flightModel.updateControlParameter("set /controls/flight/aileron "
+                flightModel.UpdateControlParameter("set /controls/flight/aileron "
                     + alieron + "\n");
             }
         }

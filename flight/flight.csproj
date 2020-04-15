@@ -9,17 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resource\icon2.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="MaterialDesignThemes" Version="3.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Resource\icon2.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +22,10 @@
     <Page Update="View\Setteing.xaml">
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resource\" />
   </ItemGroup>
 
 </Project>
